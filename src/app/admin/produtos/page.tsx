@@ -4,29 +4,35 @@ import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, Pencil, Trash2, X, Eye, Search } from "lucide-react";
 import ProductDetailModal from "@/components/admin/ProductDetailModal";
-import { PRODUCT_CATEGORIES, formatPrice } from "@/lib/utils";
+import {
+  PRODUCT_CATEGORIES,
+  formatPrice,
+  formatDate,
+  formatDateInput,
+  getProductStatusLabel,
+} from "@/lib/utils";
 import type { Product } from "@/types";
 
 interface ProductForm {
+  code: string;
   name: string;
-  description: string;
-  price: string;
   category: string;
+  price: string;
+  stockQuantity: string;
+  expirationDate: string;
   imageUrl: string;
-  weight: string;
-  ingredients: string;
-  available: boolean;
+  active: boolean;
 }
 
 const emptyForm: ProductForm = {
+  code: "",
   name: "",
-  description: "",
-  price: "",
   category: "Pães",
+  price: "",
+  stockQuantity: "0",
+  expirationDate: "",
   imageUrl: "",
-  weight: "",
-  ingredients: "",
-  available: true,
+  active: true,
 };
 
 export default function AdminProductsPage() {
@@ -58,7 +64,7 @@ export default function AdminProductsPage() {
 
   async function loadProducts() {
     setLoading(true);
-    const res = await fetch("/api/products?available=false");
+    const res = await fetch("/api/products?active=false");
     const data = await res.json();
     setProducts(data);
     setLoading(false);
@@ -66,11 +72,12 @@ export default function AdminProductsPage() {
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
+      const term = search.toLowerCase();
       const matchesSearch =
         search === "" ||
-        product.name.toLowerCase().includes(search.toLowerCase()) ||
-        product.description.toLowerCase().includes(search.toLowerCase()) ||
-        product.category.toLowerCase().includes(search.toLowerCase());
+        product.name.toLowerCase().includes(term) ||
+        product.code.toLowerCase().includes(term) ||
+        product.category.toLowerCase().includes(term);
 
       const matchesCategory =
         categoryFilter === "Todos" || product.category === categoryFilter;
@@ -94,14 +101,14 @@ export default function AdminProductsPage() {
   function openEditForm(product: Product) {
     setEditingId(product.id);
     setForm({
+      code: product.code,
       name: product.name,
-      description: product.description,
-      price: product.price.toString(),
       category: product.category,
+      price: product.price.toString(),
+      stockQuantity: product.stockQuantity.toString(),
+      expirationDate: formatDateInput(product.expirationDate),
       imageUrl: product.imageUrl || "",
-      weight: product.weight || "",
-      ingredients: product.ingredients || "",
-      available: product.available,
+      active: product.active,
     });
     setShowForm(true);
     setError("");
@@ -122,7 +129,10 @@ export default function AdminProductsPage() {
     const res = await fetch(url, {
       method,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify({
+        ...form,
+        expirationDate: form.expirationDate || null,
+      }),
     });
 
     if (!res.ok) {
@@ -181,7 +191,6 @@ export default function AdminProductsPage() {
         </div>
       )}
 
-      {/* Consultar — busca e filtros */}
       <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 shadow-sm sm:flex-row sm:items-center">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
@@ -189,7 +198,7 @@ export default function AdminProductsPage() {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Consultar produto por nome, descrição ou categoria..."
+            placeholder="Consultar por código, nome ou categoria..."
             className="w-full rounded-lg border border-border py-2.5 pl-10 pr-4 text-sm outline-none focus:border-primary"
           />
         </div>
@@ -226,36 +235,17 @@ export default function AdminProductsPage() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="mb-1 block text-sm font-medium">Nome *</label>
-                <input
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  required
-                  className="w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-primary"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium">Descrição *</label>
-                <textarea
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  required
-                  rows={3}
-                  className="w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-primary"
-                />
-              </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-1 block text-sm font-medium">Preço (R$) *</label>
+                  <label className="mb-1 block text-sm font-medium">Código *</label>
                   <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value={form.price}
-                    onChange={(e) => setForm({ ...form, price: e.target.value })}
+                    value={form.code}
+                    onChange={(e) =>
+                      setForm({ ...form, code: e.target.value.toUpperCase() })
+                    }
                     required
-                    className="w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-primary"
+                    placeholder="Ex: PAO001"
+                    className="w-full rounded-lg border border-border px-3 py-2 font-mono text-sm uppercase outline-none focus:border-primary"
                   />
                 </div>
                 <div>
@@ -273,8 +263,47 @@ export default function AdminProductsPage() {
                   </select>
                 </div>
               </div>
+
               <div>
-                <label className="mb-1 block text-sm font-medium">URL da Imagem</label>
+                <label className="mb-1 block text-sm font-medium">Nome *</label>
+                <input
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  required
+                  className="w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-primary"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-1 block text-sm font-medium">Preço de venda (R$) *</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={form.price}
+                    onChange={(e) => setForm({ ...form, price: e.target.value })}
+                    required
+                    className="w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-primary"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium">Quantidade em estoque *</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={form.stockQuantity}
+                    onChange={(e) => setForm({ ...form, stockQuantity: e.target.value })}
+                    required
+                    className="w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-primary"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium">
+                  URL da Imagem <span className="text-muted">(opcional)</span>
+                </label>
                 <input
                   value={form.imageUrl}
                   onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
@@ -282,35 +311,33 @@ export default function AdminProductsPage() {
                   className="w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-primary"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="mb-1 block text-sm font-medium">Peso/Tamanho</label>
-                  <input
-                    value={form.weight}
-                    onChange={(e) => setForm({ ...form, weight: e.target.value })}
-                    placeholder="Ex: 500g"
-                    className="w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-primary"
-                  />
-                </div>
-                <div>
-                  <label className="mb-1 block text-sm font-medium">Ingredientes</label>
-                  <input
-                    value={form.ingredients}
-                    onChange={(e) => setForm({ ...form, ingredients: e.target.value })}
-                    placeholder="Ex: Farinha, ovos..."
-                    className="w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-primary"
-                  />
-                </div>
-              </div>
-              <label className="flex items-center gap-2">
+
+              <div>
+                <label className="mb-1 block text-sm font-medium">
+                  Data de validade <span className="text-muted">(opcional)</span>
+                </label>
                 <input
-                  type="checkbox"
-                  checked={form.available}
-                  onChange={(e) => setForm({ ...form, available: e.target.checked })}
-                  className="rounded border-border"
+                  type="date"
+                  value={form.expirationDate}
+                  onChange={(e) => setForm({ ...form, expirationDate: e.target.value })}
+                  className="w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-primary"
                 />
-                <span className="text-sm">Produto disponível</span>
-              </label>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium">Status *</label>
+                <select
+                  value={form.active ? "ativo" : "inativo"}
+                  onChange={(e) =>
+                    setForm({ ...form, active: e.target.value === "ativo" })
+                  }
+                  className="w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-primary"
+                >
+                  <option value="ativo">Ativo</option>
+                  <option value="inativo">Inativo</option>
+                </select>
+              </div>
+
               <div className="flex gap-3 pt-2">
                 <button
                   type="button"
@@ -353,36 +380,43 @@ export default function AdminProductsPage() {
             <table className="w-full text-sm">
               <thead className="border-b border-border bg-secondary/50">
                 <tr>
-                  <th className="px-6 py-3 text-left font-medium text-muted">Produto</th>
-                  <th className="px-6 py-3 text-left font-medium text-muted">Categoria</th>
-                  <th className="px-6 py-3 text-left font-medium text-muted">Preço</th>
-                  <th className="px-6 py-3 text-left font-medium text-muted">Status</th>
-                  <th className="px-6 py-3 text-right font-medium text-muted">Ações</th>
+                  <th className="px-4 py-3 text-left font-medium text-muted">Código</th>
+                  <th className="px-4 py-3 text-left font-medium text-muted">Nome</th>
+                  <th className="px-4 py-3 text-left font-medium text-muted">Categoria</th>
+                  <th className="px-4 py-3 text-left font-medium text-muted">Preço</th>
+                  <th className="px-4 py-3 text-left font-medium text-muted">Estoque</th>
+                  <th className="px-4 py-3 text-left font-medium text-muted">Validade</th>
+                  <th className="px-4 py-3 text-left font-medium text-muted">Status</th>
+                  <th className="px-4 py-3 text-right font-medium text-muted">Ações</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {filteredProducts.map((product) => (
                   <tr key={product.id} className="hover:bg-secondary/30">
-                    <td className="px-6 py-4">
-                      <p className="font-medium text-foreground">{product.name}</p>
-                      <p className="text-xs text-muted line-clamp-1">{product.description}</p>
+                    <td className="px-4 py-4 font-mono text-xs text-primary">
+                      {product.code}
                     </td>
-                    <td className="px-6 py-4 text-muted">{product.category}</td>
-                    <td className="px-6 py-4 font-medium text-primary">
+                    <td className="px-4 py-4 font-medium text-foreground">{product.name}</td>
+                    <td className="px-4 py-4 text-muted">{product.category}</td>
+                    <td className="px-4 py-4 font-medium text-primary">
                       {formatPrice(product.price)}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-4 text-muted">{product.stockQuantity}</td>
+                    <td className="px-4 py-4 text-muted">
+                      {formatDate(product.expirationDate)}
+                    </td>
+                    <td className="px-4 py-4">
                       <span
                         className={`rounded-full px-2.5 py-1 text-xs font-medium ${
-                          product.available
+                          product.active
                             ? "bg-green-100 text-green-700"
                             : "bg-red-100 text-red-700"
                         }`}
                       >
-                        {product.available ? "Disponível" : "Indisponível"}
+                        {getProductStatusLabel(product.active)}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-4">
                       <div className="flex justify-end gap-1">
                         <button
                           type="button"

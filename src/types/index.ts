@@ -6,6 +6,7 @@ export interface Product {
   price: number;
   stockQuantity: number;
   expirationDate: string | Date | null;
+  imageUrl: string | null;
   active: boolean;
   createdAt: string | Date;
   updatedAt: string | Date;

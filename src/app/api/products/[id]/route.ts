@@ -32,17 +32,34 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     const { id } = await params;
     const body = await request.json();
 
+    const current = await prisma.product.findUnique({ where: { id } });
+    if (!current) {
+      return NextResponse.json({ error: "Produto não encontrado" }, { status: 404 });
+    }
+
+    if (body.code && body.code.trim().toUpperCase() !== current.code) {
+      const duplicate = await prisma.product.findUnique({
+        where: { code: body.code.trim().toUpperCase() },
+      });
+      if (duplicate) {
+        return NextResponse.json(
+          { error: "Já existe um produto com este código" },
+          { status: 409 }
+        );
+      }
+    }
+
     const product = await prisma.product.update({
       where: { id },
       data: {
+        code: body.code ? body.code.trim().toUpperCase() : current.code,
         name: body.name,
-        description: body.description,
-        price: parseFloat(body.price),
         category: body.category,
+        price: parseFloat(body.price),
+        stockQuantity: parseInt(body.stockQuantity ?? "0", 10) || 0,
+        expirationDate: body.expirationDate ? new Date(body.expirationDate) : null,
         imageUrl: body.imageUrl || null,
-        weight: body.weight || null,
-        ingredients: body.ingredients || null,
-        available: body.available !== false,
+        active: body.active !== false,
       },
     });
 

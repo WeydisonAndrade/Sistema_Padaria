@@ -3,17 +3,17 @@ import Link from "next/link";
 import { Package, CheckCircle, XCircle, ArrowRight } from "lucide-react";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, getProductStatusLabel } from "@/lib/utils";
 
 export default async function AdminDashboardPage() {
   const session = await getSession();
   if (!session) redirect("/admin/login");
 
-  const [totalProducts, availableProducts, unavailableProducts, recentProducts] =
+  const [totalProducts, activeProducts, inactiveProducts, recentProducts] =
     await Promise.all([
       prisma.product.count(),
-      prisma.product.count({ where: { available: true } }),
-      prisma.product.count({ where: { available: false } }),
+      prisma.product.count({ where: { active: true } }),
+      prisma.product.count({ where: { active: false } }),
       prisma.product.findMany({
         take: 5,
         orderBy: { updatedAt: "desc" },
@@ -28,14 +28,14 @@ export default async function AdminDashboardPage() {
       color: "bg-primary/10 text-primary",
     },
     {
-      label: "Disponíveis",
-      value: availableProducts,
+      label: "Ativos",
+      value: activeProducts,
       icon: CheckCircle,
       color: "bg-green-100 text-green-700",
     },
     {
-      label: "Indisponíveis",
-      value: unavailableProducts,
+      label: "Inativos",
+      value: inactiveProducts,
       icon: XCircle,
       color: "bg-red-100 text-red-700",
     },
@@ -95,7 +95,9 @@ export default async function AdminDashboardPage() {
               >
                 <div>
                   <p className="font-medium text-foreground">{product.name}</p>
-                  <p className="text-sm text-muted">{product.category}</p>
+                  <p className="text-sm text-muted">
+                    {product.code} · {product.category}
+                  </p>
                 </div>
                 <div className="text-right">
                   <p className="font-medium text-primary">
@@ -103,10 +105,10 @@ export default async function AdminDashboardPage() {
                   </p>
                   <span
                     className={`text-xs ${
-                      product.available ? "text-green-600" : "text-red-600"
+                      product.active ? "text-green-600" : "text-red-600"
                     }`}
                   >
-                    {product.available ? "Disponível" : "Indisponível"}
+                    {getProductStatusLabel(product.active)}
                   </span>
                 </div>
               </div>

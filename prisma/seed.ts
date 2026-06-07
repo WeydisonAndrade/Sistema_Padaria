@@ -41,81 +41,73 @@ async function main() {
 
   const products = [
     {
+      code: "PAO001",
       name: "Pão Francês",
-      description: "Pão francês tradicional, crocante por fora e macio por dentro.",
+      category: "Pães",
       price: 0.75,
-      category: "Pães",
-      weight: "50g",
-      ingredients: "Farinha de trigo, água, sal, fermento",
-      imageUrl:
-        "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&q=80",
+      stockQuantity: 200,
+      expirationDate: null,
+      imageUrl: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&q=80",
+      active: true,
     },
     {
+      code: "PAO002",
       name: "Pão de Forma Integral",
-      description: "Pão de forma integral com grãos, ideal para um café da manhã saudável.",
-      price: 12.9,
       category: "Pães",
-      weight: "500g",
-      ingredients: "Farinha integral, grãos, mel, fermento",
-      imageUrl:
-        "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=600&q=80",
+      price: 12.9,
+      stockQuantity: 30,
+      expirationDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+      imageUrl: "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=600&q=80",
+      active: true,
     },
     {
+      code: "BOL001",
       name: "Bolo de Chocolate",
-      description: "Bolo de chocolate com cobertura cremosa, perfeito para celebrações.",
-      price: 45.0,
       category: "Bolos",
-      weight: "1kg",
-      ingredients: "Chocolate, ovos, farinha, açúcar, manteiga",
-      imageUrl:
-        "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600&q=80",
+      price: 45.0,
+      stockQuantity: 8,
+      expirationDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+      imageUrl: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600&q=80",
+      active: true,
     },
     {
+      code: "DOC001",
       name: "Croissant",
-      description: "Croissant amanteigado, folhado e dourado.",
-      price: 8.5,
       category: "Doces",
-      weight: "80g",
-      ingredients: "Farinha, manteiga, fermento, açúcar",
-      imageUrl:
-        "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&q=80",
+      price: 8.5,
+      stockQuantity: 50,
+      expirationDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+      imageUrl: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&q=80",
+      active: true,
     },
     {
+      code: "SAL001",
       name: "Empada de Frango",
-      description: "Empada recheada com frango desfiado temperado.",
-      price: 6.0,
       category: "Salgados",
-      weight: "100g",
-      ingredients: "Farinha, frango, temperos, ovos",
-      imageUrl:
-        "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=600&q=80",
+      price: 6.0,
+      stockQuantity: 40,
+      expirationDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+      imageUrl: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=600&q=80",
+      active: true,
     },
     {
+      code: "BEB001",
       name: "Café Expresso",
-      description: "Café expresso encorpado, torrado na hora.",
-      price: 5.0,
       category: "Bebidas",
-      weight: "50ml",
-      ingredients: "Grãos de café arábica",
-      imageUrl:
-        "https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=600&q=80",
+      price: 5.0,
+      stockQuantity: 100,
+      expirationDate: null,
+      imageUrl: "https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=600&q=80",
+      active: true,
     },
   ];
 
-  const existingCount = await prisma.product.count();
-  if (existingCount === 0) {
-    await prisma.product.createMany({ data: products });
-  }
-
-  const imageFixes: Record<string, string> = {
-    "Bolo de Chocolate":
-      "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600&q=80",
-    "Café Expresso":
-      "https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=600&q=80",
-  };
-
-  for (const [name, imageUrl] of Object.entries(imageFixes)) {
-    await prisma.product.updateMany({ where: { name }, data: { imageUrl } });
+  for (const product of products) {
+    await prisma.product.upsert({
+      where: { code: product.code },
+      update: product,
+      create: product,
+    });
   }
 
   console.log("Seed concluído!");

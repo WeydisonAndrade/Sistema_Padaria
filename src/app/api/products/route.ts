@@ -6,12 +6,12 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get("category");
-    const availableOnly = searchParams.get("available") !== "false";
+    const activeOnly = searchParams.get("active") !== "false";
 
     const products = await prisma.product.findMany({
       where: {
         ...(category && category !== "Todos" ? { category } : {}),
-        ...(availableOnly ? { available: true } : {}),
+        ...(activeOnly ? { active: true } : {}),
       },
       orderBy: { createdAt: "desc" },
     });
@@ -33,26 +33,34 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { name, description, price, category, imageUrl, weight, ingredients, available } =
+    const { code, name, category, price, stockQuantity, expirationDate, imageUrl, active } =
       body;
 
-    if (!name || !description || price === undefined || !category) {
+    if (!code || !name || !category || price === undefined || price === "") {
       return NextResponse.json(
-        { error: "Campos obrigatórios: nome, descrição, preço e categoria" },
+        { error: "Campos obrigatórios: código, nome, categoria e preço de venda" },
         { status: 400 }
+      );
+    }
+
+    const existing = await prisma.product.findUnique({ where: { code } });
+    if (existing) {
+      return NextResponse.json(
+        { error: "Já existe um produto com este código" },
+        { status: 409 }
       );
     }
 
     const product = await prisma.product.create({
       data: {
+        code: code.trim().toUpperCase(),
         name,
-        description,
-        price: parseFloat(price),
         category,
+        price: parseFloat(price),
+        stockQuantity: parseInt(stockQuantity ?? "0", 10) || 0,
+        expirationDate: expirationDate ? new Date(expirationDate) : null,
         imageUrl: imageUrl || null,
-        weight: weight || null,
-        ingredients: ingredients || null,
-        available: available !== false,
+        active: active !== false,
       },
     });
 

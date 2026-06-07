@@ -11,7 +11,7 @@ export default async function HomePage() {
   const [settings, featuredProducts] = await Promise.all([
     prisma.bakerySettings.findUnique({ where: { id: "default" } }),
     prisma.product.findMany({
-      where: { available: true },
+      where: { active: true, stockQuantity: { gt: 0 } },
       take: 3,
       orderBy: { createdAt: "desc" },
     }),

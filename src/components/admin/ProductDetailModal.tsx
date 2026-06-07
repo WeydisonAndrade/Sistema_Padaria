@@ -1,8 +1,12 @@
 "use client";
 
-import { X, Scale, Leaf, Tag, CircleDollarSign, Package } from "lucide-react";
+import { X, Tag, CircleDollarSign, Package, Hash, Boxes, Calendar } from "lucide-react";
 import ProductImage from "@/components/ProductImage";
-import { formatPrice } from "@/lib/utils";
+import {
+  formatPrice,
+  formatDate,
+  getProductStatusLabel,
+} from "@/lib/utils";
 import type { Product } from "@/types";
 
 interface ProductDetailModalProps {
@@ -19,77 +23,72 @@ export default function ProductDetailModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-card shadow-xl">
-        <div className="relative aspect-video overflow-hidden bg-secondary">
-          {product.imageUrl ? (
+        {product.imageUrl && (
+          <div className="relative aspect-video overflow-hidden bg-secondary">
             <ProductImage src={product.imageUrl} alt={product.name} sizes="512px" />
-          ) : (
-            <div className="flex h-full items-center justify-center text-muted italic">
-              Sem imagem
-            </div>
-          )}
+          </div>
+        )}
+
+        <div className="flex items-center justify-between border-b border-border px-6 py-4">
+          <div>
+            <p className="text-xs font-medium tracking-widest text-gold uppercase">
+              Consulta de Produto
+            </p>
+            <h2 className="font-display text-xl font-bold text-foreground">
+              {product.name}
+            </h2>
+          </div>
           <button
             type="button"
             onClick={onClose}
-            className="absolute right-3 top-3 rounded-full bg-card/90 p-2 shadow-sm hover:bg-card"
+            className="rounded-full p-2 hover:bg-secondary"
             aria-label="Fechar"
           >
             <X className="h-4 w-4" />
           </button>
-          <span
-            className={`absolute left-3 top-3 rounded-full px-3 py-1 text-xs font-medium ${
-              product.available
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
-            }`}
-          >
-            {product.available ? "Disponível" : "Indisponível"}
-          </span>
         </div>
 
         <div className="p-6">
-          <p className="mb-1 text-xs font-medium tracking-widest text-gold uppercase">
-            {product.category}
-          </p>
-          <h2 className="font-display text-2xl font-bold text-foreground">{product.name}</h2>
-          <p className="mt-1 font-display text-xl font-semibold text-primary">
-            {formatPrice(product.price)}
-          </p>
+          <div className="mb-4 flex items-center justify-between">
+            <span className="font-mono text-sm font-medium text-primary">{product.code}</span>
+            <span
+              className={`rounded-full px-3 py-1 text-xs font-medium ${
+                product.active
+                  ? "bg-green-100 text-green-700"
+                  : "bg-red-100 text-red-700"
+              }`}
+            >
+              {getProductStatusLabel(product.active)}
+            </span>
+          </div>
 
-          <p className="mt-4 text-sm leading-relaxed text-muted">{product.description}</p>
-
-          <div className="mt-6 space-y-3 rounded-xl bg-secondary/50 p-4">
-            <h3 className="text-xs font-medium tracking-widest text-muted uppercase">
-              Especificações
-            </h3>
-            {product.weight && (
-              <div className="flex items-center gap-2 text-sm">
-                <Scale className="h-4 w-4 text-primary" />
-                <span className="text-muted">Peso/Tamanho:</span>
-                <span className="font-medium">{product.weight}</span>
+          <div className="space-y-3 rounded-xl bg-secondary/50 p-4">
+            {[
+              { icon: Hash, label: "Código", value: product.code },
+              { icon: Package, label: "Nome", value: product.name },
+              { icon: Tag, label: "Categoria", value: product.category },
+              {
+                icon: CircleDollarSign,
+                label: "Preço de venda",
+                value: formatPrice(product.price),
+              },
+              {
+                icon: Boxes,
+                label: "Quantidade em estoque",
+                value: String(product.stockQuantity),
+              },
+              {
+                icon: Calendar,
+                label: "Data de validade",
+                value: formatDate(product.expirationDate),
+              },
+            ].map(({ icon: Icon, label, value }) => (
+              <div key={label} className="flex items-center gap-3 text-sm">
+                <Icon className="h-4 w-4 shrink-0 text-primary" />
+                <span className="w-36 text-muted">{label}:</span>
+                <span className="font-medium">{value}</span>
               </div>
-            )}
-            {product.ingredients && (
-              <div className="flex items-start gap-2 text-sm">
-                <Leaf className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <span className="text-muted">Ingredientes:</span>
-                <span className="font-medium">{product.ingredients}</span>
-              </div>
-            )}
-            <div className="flex items-center gap-2 text-sm">
-              <Tag className="h-4 w-4 text-primary" />
-              <span className="text-muted">Categoria:</span>
-              <span className="font-medium">{product.category}</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <CircleDollarSign className="h-4 w-4 text-primary" />
-              <span className="text-muted">Preço:</span>
-              <span className="font-medium">{formatPrice(product.price)}</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <Package className="h-4 w-4 text-primary" />
-              <span className="text-muted">ID:</span>
-              <span className="font-mono text-xs">{product.id}</span>
-            </div>
+            ))}
           </div>
 
           <div className="mt-6 flex gap-3">
