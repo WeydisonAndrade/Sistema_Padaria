@@ -35,6 +35,11 @@ yarn-error.log*
 # vercel
 .vercel
 
+# misc debug (local)
+committed_blob.bin
+committed_raw.md
+temp_readme.txt
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

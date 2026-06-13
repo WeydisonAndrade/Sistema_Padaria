@@ -16,6 +16,7 @@ interface CartContextValue {
   items: CartLine[];
   itemCount: number;
   subtotal: number;
+  isReady: boolean;
   addItem: (item: Omit<CartLine, "quantity">, quantity?: number) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   removeItem: (productId: string) => void;
@@ -111,12 +112,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       items,
       itemCount,
       subtotal,
+      isReady: hydrated,
       addItem,
       updateQuantity,
       removeItem,
       clearCart,
     }),
-    [items, itemCount, subtotal, addItem, updateQuantity, removeItem, clearCart]
+    [items, itemCount, subtotal, hydrated, addItem, updateQuantity, removeItem, clearCart]
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

@@ -5,18 +5,23 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import CartLoading from "@/components/CartLoading";
 import { formatPrice } from "@/lib/utils";
 import { BAKERY_TAGLINE } from "@/lib/constants";
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, subtotal, clearCart } = useCart();
+  const { items, subtotal, clearCart, isReady } = useCart();
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  if (!isReady) {
+    return <CartLoading />;
+  }
 
   if (items.length === 0) {
     return (

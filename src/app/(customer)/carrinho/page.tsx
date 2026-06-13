@@ -3,11 +3,16 @@
 import Link from "next/link";
 import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import CartLoading from "@/components/CartLoading";
 import { formatPrice } from "@/lib/utils";
 import { BAKERY_TAGLINE } from "@/lib/constants";
 
 export default function CartPage() {
-  const { items, subtotal, itemCount, updateQuantity, removeItem } = useCart();
+  const { items, subtotal, itemCount, updateQuantity, removeItem, isReady } = useCart();
+
+  if (!isReady) {
+    return <CartLoading />;
+  }
 
   if (items.length === 0) {
     return (
