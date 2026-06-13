@@ -1,3 +1,8 @@
+/**
+ * Contexto global do carrinho de compras do cliente.
+ * Persiste itens no localStorage e expõe ações de adicionar, atualizar e limpar.
+ */
+
 "use client";
 
 import {
@@ -10,6 +15,7 @@ import {
 } from "react";
 import type { CartLine } from "@/types";
 
+// --- Chave de persistência no localStorage ---
 const STORAGE_KEY = "tutti-pane-cart";
 
 interface CartContextValue {
@@ -25,6 +31,7 @@ interface CartContextValue {
 
 const CartContext = createContext<CartContextValue | null>(null);
 
+// --- Leitura segura do carrinho salvo no navegador ---
 function loadStoredCart(): CartLine[] {
   if (typeof window === "undefined") return [];
   try {
@@ -41,16 +48,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartLine[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
+  // --- Hidratação: restaura carrinho do localStorage na montagem ---
   useEffect(() => {
     setItems(loadStoredCart());
     setHydrated(true);
   }, []);
 
+  // --- Sincronização: persiste alterações no localStorage ---
   useEffect(() => {
     if (!hydrated) return;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }, [items, hydrated]);
 
+  // --- Ações de manipulação do carrinho ---
   const addItem = useCallback(
     (item: Omit<CartLine, "quantity">, quantity = 1) => {
       setItems((prev) => {
@@ -97,6 +107,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const clearCart = useCallback(() => setItems([]), []);
 
+  // --- Valores derivados: quantidade total e subtotal ---
   const itemCount = useMemo(
     () => items.reduce((sum, line) => sum + line.quantity, 0),
     [items]
@@ -124,6 +135,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
 
+// --- Hook de consumo do contexto (exige CartProvider na árvore) ---
 export function useCart() {
   const context = useContext(CartContext);
   if (!context) {

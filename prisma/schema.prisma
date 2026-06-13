@@ -1,3 +1,5 @@
+// Schema do banco SQLite via Prisma — modelos do sistema Tutti Pane
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,14 +9,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// --- Autenticação do painel administrativo ---
 model Admin {
   id        String   @id @default(cuid())
   email     String   @unique
-  password  String
+  password  String // hash bcrypt
   name      String
   createdAt DateTime @default(now())
 }
 
+// --- Catálogo de produtos da padaria ---
 model Product {
   id             String      @id @default(cuid())
   code           String      @unique
@@ -31,6 +35,7 @@ model Product {
   orderItems     OrderItem[]
 }
 
+// --- Vendas registradas manualmente pelo admin (balcão) ---
 model Sale {
   id        String   @id @default(cuid())
   productId String
@@ -41,14 +46,15 @@ model Sale {
   createdAt DateTime @default(now())
 }
 
+// --- Pedidos feitos pelos clientes no site ---
 model Order {
   id            String      @id @default(cuid())
-  orderNumber   String      @unique
+  orderNumber   String      @unique // ex: TP20250613-0001
   customerName  String
   customerPhone String
   customerEmail String?
   notes         String?
-  status        String      @default("PENDING")
+  status        String      @default("PENDING") // PENDING | CONFIRMED | CANCELLED
   subtotal      Float
   total         Float
   createdAt     DateTime    @default(now())
@@ -56,6 +62,7 @@ model Order {
   items         OrderItem[]
 }
 
+// --- Itens de cada pedido online (preço congelado no momento da compra) ---
 model OrderItem {
   id        String  @id @default(cuid())
   orderId   String
@@ -67,6 +74,7 @@ model OrderItem {
   total     Float
 }
 
+// --- Configurações gerais da padaria (registro único id=default) ---
 model BakerySettings {
   id           String @id @default("default")
   name         String @default("Tutti Pane")

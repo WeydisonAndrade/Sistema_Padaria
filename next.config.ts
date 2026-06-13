@@ -1,6 +1,10 @@
+/**
+ * Configuração do Next.js — imagens remotas, Turbopack e estabilidade do dev server.
+ */
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // --- Permite imagens do Unsplash nos componentes next/image ---
   images: {
     remotePatterns: [
       {

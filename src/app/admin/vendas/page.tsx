@@ -1,3 +1,8 @@
+/**
+ * Página de registro de vendas presenciais no admin.
+ * Monta carrinho local, valida estoque e registra venda com baixa automática no banco.
+ */
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -6,6 +11,7 @@ import { ShoppingCart, Plus, Trash2, CheckCircle } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 import type { Product } from "@/types";
 
+// --- Tipos auxiliares do carrinho e histórico de vendas ---
 interface CartItem {
   productId: string;
   quantity: number;
@@ -35,6 +41,7 @@ export default function AdminSalesPage() {
     loadData();
   }, [router]);
 
+  // --- Carrega produtos ativos e vendas recentes (requer autenticação) ---
   async function loadData() {
     setLoading(true);
     const authRes = await fetch("/api/auth/me");
@@ -58,6 +65,7 @@ export default function AdminSalesPage() {
 
   const selectedProduct = products.find((p) => p.id === selectedProductId);
 
+  // --- Carrinho local: adicionar, remover e calcular total ---
   function addToCart() {
     setError("");
     if (!selectedProductId) {
@@ -108,6 +116,7 @@ export default function AdminSalesPage() {
     }, 0);
   }
 
+  // --- Confirma venda via POST /api/sales e atualiza estoque ---
   async function handleRegisterSale() {
     if (cart.length === 0) {
       setError("Adicione produtos à venda.");
@@ -172,6 +181,7 @@ export default function AdminSalesPage() {
       )}
 
       <div className="grid gap-6 lg:grid-cols-2">
+        {/* --- Formulário de nova venda e carrinho --- */}
         <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
           <h2 className="mb-4 font-display text-lg font-semibold">Nova venda</h2>
 
@@ -276,6 +286,7 @@ export default function AdminSalesPage() {
           )}
         </div>
 
+        {/* --- Histórico de vendas recentes --- */}
         <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
           <h2 className="mb-4 font-display text-lg font-semibold">Vendas recentes</h2>
           {recentSales.length > 0 ? (

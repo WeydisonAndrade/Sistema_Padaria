@@ -1,8 +1,13 @@
+/**
+ * Vendas registradas no balcão: listagem recente e registro de nova venda.
+ */
+
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { registerSale, SaleError } from "@/lib/sales";
 
+// --- GET: últimas vendas com dados do produto (admin) ---
 export async function GET() {
   try {
     const session = await getSession();
@@ -29,6 +34,7 @@ export async function GET() {
   }
 }
 
+// --- POST: registra venda e atualiza estoque (admin) ---
 export async function POST(request: NextRequest) {
   try {
     const session = await getSession();

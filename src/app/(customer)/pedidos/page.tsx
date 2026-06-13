@@ -1,3 +1,8 @@
+/**
+ * Página de consulta de pedidos do cliente.
+ * Busca pedidos pelo telefone informado e exibe status e totais.
+ */
+
 "use client";
 
 import { useState } from "react";
@@ -19,6 +24,7 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // --- Busca pedidos na API pelo telefone (apenas dígitos) ---
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault();
     setError("");

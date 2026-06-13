@@ -1,3 +1,8 @@
+/**
+ * Conteúdo da confirmação de pedido (componente cliente).
+ * Carrega detalhes do pedido por ID + telefone e oferece ações pós-compra.
+ */
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -26,6 +31,7 @@ export default function OrderConfirmationContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // --- Carrega pedido e configurações (validação por telefone na query) ---
   useEffect(() => {
     async function loadOrder() {
       setLoading(true);
@@ -81,6 +87,7 @@ export default function OrderConfirmationContent() {
     );
   }
 
+  // --- Mensagem pré-formatada para combinar pagamento no WhatsApp ---
   const whatsappMessage = buildOrderWhatsAppMessage(
     BAKERY_NAME,
     order.orderNumber,

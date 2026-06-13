@@ -1,5 +1,11 @@
+/**
+ * Registro de vendas no balcão: valida itens, debita estoque
+ * e persiste cada linha de venda em transação atômica.
+ */
+
 import { prisma } from "@/lib/prisma";
 
+// --- Erro de domínio ---
 export class SaleError extends Error {
   constructor(message: string) {
     super(message);
@@ -7,6 +13,7 @@ export class SaleError extends Error {
   }
 }
 
+// --- Tipos de entrada e resultado ---
 export interface SaleItemInput {
   productId: string;
   quantity: number;
@@ -29,6 +36,7 @@ export interface RegisteredSale {
   };
 }
 
+// --- Registro de venda com validação e débito de estoque ---
 export async function registerSale(
   items: SaleItemInput[]
 ): Promise<RegisteredSale[]> {

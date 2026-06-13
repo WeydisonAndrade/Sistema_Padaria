@@ -1,9 +1,16 @@
 "use client";
 
+/**
+ * Mapa interativo (Leaflet) com marcador na localização da padaria,
+ * carregado apenas no cliente para evitar erros de SSR.
+ */
+
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import type { Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
+
+// --- Tipos ---
 
 interface BakeryMapProps {
   latitude: number;
@@ -20,6 +27,7 @@ export default function BakeryMap({
 }: BakeryMapProps) {
   const [icon, setIcon] = useState<Icon | null>(null);
 
+  // --- Carrega ícone padrão do Leaflet no cliente ---
   useEffect(() => {
     import("leaflet").then((L) => {
       setIcon(
@@ -37,6 +45,7 @@ export default function BakeryMap({
     });
   }, []);
 
+  // --- Placeholder enquanto o ícone não está pronto ---
   if (!icon) {
     return (
       <div className="flex h-[400px] items-center justify-center rounded-xl border border-border bg-secondary">

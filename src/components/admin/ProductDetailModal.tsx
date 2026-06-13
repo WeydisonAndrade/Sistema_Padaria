@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * Modal de consulta de produto no painel admin: exibe detalhes
+ * completos e permite fechar ou ir para a edição do item.
+ */
+
 import { X, Tag, CircleDollarSign, Package, Hash, Boxes, Calendar } from "lucide-react";
 import ProductImage from "@/components/ProductImage";
 import {
@@ -8,6 +13,8 @@ import {
   getProductStatusLabel,
 } from "@/lib/utils";
 import type { Product } from "@/types";
+
+// --- Tipos ---
 
 interface ProductDetailModalProps {
   product: Product;
@@ -21,14 +28,17 @@ export default function ProductDetailModal({
   onEdit,
 }: ProductDetailModalProps) {
   return (
+    // --- Overlay e container do modal ---
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-card shadow-xl">
+        {/* --- Imagem do produto (quando disponível) --- */}
         {product.imageUrl && (
           <div className="relative aspect-video overflow-hidden bg-secondary">
             <ProductImage src={product.imageUrl} alt={product.name} sizes="512px" />
           </div>
         )}
 
+        {/* --- Cabeçalho com título e botão fechar --- */}
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <div>
             <p className="text-xs font-medium tracking-widest text-gold uppercase">
@@ -49,6 +59,7 @@ export default function ProductDetailModal({
         </div>
 
         <div className="p-6">
+          {/* --- Código e badge de status --- */}
           <div className="mb-4 flex items-center justify-between">
             <span className="font-mono text-sm font-medium text-primary">{product.code}</span>
             <span
@@ -62,6 +73,7 @@ export default function ProductDetailModal({
             </span>
           </div>
 
+          {/* --- Lista de atributos do produto --- */}
           <div className="space-y-3 rounded-xl bg-secondary/50 p-4">
             {[
               { icon: Hash, label: "Código", value: product.code },
@@ -91,6 +103,7 @@ export default function ProductDetailModal({
             ))}
           </div>
 
+          {/* --- Ações: fechar ou editar --- */}
           <div className="mt-6 flex gap-3">
             <button
               type="button"

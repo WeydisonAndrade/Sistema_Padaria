@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * Card de produto na vitrine do cliente: exibe imagem, preço, estoque
+ * e ações para adicionar ao carrinho ou pedir via WhatsApp.
+ */
+
 import { useState } from "react";
 import { Tag, Boxes, ShoppingCart, Check } from "lucide-react";
 import ProductImage from "./ProductImage";
@@ -7,6 +12,8 @@ import WhatsAppButton from "./WhatsAppButton";
 import { useCart } from "@/contexts/CartContext";
 import { formatPrice, buildProductWhatsAppMessage } from "@/lib/utils";
 import type { Product } from "@/types";
+
+// --- Tipos ---
 
 interface ProductCardProps {
   product: Product;
@@ -19,6 +26,7 @@ export default function ProductCard({ product, whatsapp }: ProductCardProps) {
   const message = buildProductWhatsAppMessage(product.name, product.price);
   const outOfStock = product.stockQuantity <= 0;
 
+  // --- Adiciona item ao carrinho com feedback visual temporário ---
   function handleAddToCart() {
     addItem(
       {
@@ -37,6 +45,7 @@ export default function ProductCard({ product, whatsapp }: ProductCardProps) {
 
   return (
     <article className="card-hover group overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+      {/* --- Área visual: imagem, categoria, preço e código --- */}
       <div className="relative aspect-[4/3] overflow-hidden bg-secondary">
         {product.imageUrl ? (
           <ProductImage src={product.imageUrl} alt={product.name} />
@@ -60,6 +69,7 @@ export default function ProductCard({ product, whatsapp }: ProductCardProps) {
         </span>
       </div>
 
+      {/* --- Informações e ações de compra --- */}
       <div className="p-5">
         <h3 className="mb-3 font-display text-xl font-semibold text-foreground">
           {product.name}

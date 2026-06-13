@@ -1,7 +1,12 @@
+/**
+ * CRUD de produtos (listagem pública e criação restrita ao admin).
+ */
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 
+// --- GET: lista produtos com filtros opcionais de categoria e ativo ---
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -25,6 +30,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
+// --- POST: cria produto (requer sessão admin) ---
 export async function POST(request: NextRequest) {
   try {
     const session = await getSession();

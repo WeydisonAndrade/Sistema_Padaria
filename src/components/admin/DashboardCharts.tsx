@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * Gráficos do dashboard admin: faturamento mensal, produto mais vendido
+ * e ranking de produtos. Usa Recharts e só renderiza após montagem no cliente.
+ */
+
 import { useEffect, useState } from "react";
 import {
   BarChart,
@@ -15,6 +20,8 @@ import { TrendingUp, Trophy, ShoppingBag } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 import type { MonthlyRevenue, TopProduct } from "@/lib/dashboard";
 
+// --- Tipos e constantes ---
+
 interface DashboardChartsProps {
   monthlyRevenue: MonthlyRevenue[];
   topProducts: TopProduct[];
@@ -23,6 +30,8 @@ interface DashboardChartsProps {
 }
 
 const BAR_COLORS = ["#8b2635", "#a83244", "#c45c26", "#c9a227", "#6b5344"];
+
+// --- Tooltip customizado: faturamento mensal ---
 
 function CustomTooltip({
   active,
@@ -43,6 +52,8 @@ function CustomTooltip({
     </div>
   );
 }
+
+// --- Tooltip customizado: ranking de produtos ---
 
 function TopProductTooltip({
   active,
@@ -70,16 +81,19 @@ export default function DashboardCharts({
 }: DashboardChartsProps) {
   const [mounted, setMounted] = useState(false);
 
+  // --- Aguarda montagem no cliente (Recharts exige DOM) ---
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // --- Prepara dados truncados para o eixo Y do ranking ---
   const topProductsChart = topProducts.map((p) => ({
     name: p.name.length > 12 ? `${p.name.slice(0, 12)}…` : p.name,
     fullName: p.name,
     quantity: p.totalQuantity,
   }));
 
+  // --- Placeholder enquanto não montou ---
   if (!mounted) {
     return (
       <div className="mb-8 space-y-6">
@@ -94,7 +108,7 @@ export default function DashboardCharts({
   return (
     <div className="mb-8 space-y-6">
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* Faturamento mensal */}
+        {/* --- Gráfico de faturamento mensal --- */}
         <div className="rounded-2xl border border-border bg-card p-6 shadow-sm lg:col-span-2">
           <div className="mb-6 flex items-center justify-between">
             <div>
@@ -140,7 +154,7 @@ export default function DashboardCharts({
           </div>
         </div>
 
-        {/* Produto mais vendido */}
+        {/* --- Card do produto mais vendido --- */}
         <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
           <div className="mb-4 flex items-center gap-2">
             <Trophy className="h-5 w-5 text-gold" />
@@ -186,7 +200,7 @@ export default function DashboardCharts({
         </div>
       </div>
 
-      {/* Top produtos - gráfico de colunas */}
+      {/* --- Gráfico horizontal: top produtos por quantidade --- */}
       {topProductsChart.length > 0 && (
         <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
           <h2 className="mb-1 font-display text-lg font-bold text-foreground">

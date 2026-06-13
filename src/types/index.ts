@@ -1,3 +1,9 @@
+/**
+ * Tipos compartilhados entre frontend e API: entidades de domínio
+ * e estruturas usadas no carrinho e na área do cliente.
+ */
+
+// --- Produto ---
 export interface Product {
   id: string;
   code: string;
@@ -12,6 +18,7 @@ export interface Product {
   updatedAt: string | Date;
 }
 
+// --- Configurações da padaria ---
 export interface BakerySettings {
   id: string;
   name: string;
@@ -24,12 +31,14 @@ export interface BakerySettings {
   openingHours: string;
 }
 
+// --- Sessão do administrador ---
 export interface AdminInfo {
   adminId: string;
   email: string;
   name: string;
 }
 
+// --- Carrinho do cliente ---
 export interface CartLine {
   productId: string;
   code: string;
@@ -40,6 +49,7 @@ export interface CartLine {
   quantity: number;
 }
 
+// --- Pedido e itens ---
 export interface OrderItem {
   id: string;
   productId: string;

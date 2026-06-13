@@ -1,8 +1,13 @@
+/**
+ * Pedidos online: listagem (admin ou cliente por telefone) e criação pública.
+ */
+
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { createOrder, OrderError } from "@/lib/orders";
 
+// --- GET: lista pedidos (admin vê todos; cliente filtra por telefone) ---
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -57,6 +62,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
+// --- POST: cria novo pedido a partir do checkout do cliente ---
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

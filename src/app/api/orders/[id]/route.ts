@@ -1,8 +1,13 @@
+/**
+ * Pedido individual: consulta com controle de acesso e atualização de status.
+ */
+
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { updateOrderStatus, OrderError, type OrderStatus } from "@/lib/orders";
 
+// --- GET: detalhe do pedido (admin ou cliente com telefone correspondente) ---
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -42,6 +47,7 @@ export async function GET(
   }
 }
 
+// --- PATCH: altera status do pedido (admin) ---
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

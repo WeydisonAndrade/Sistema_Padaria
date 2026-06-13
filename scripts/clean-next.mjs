@@ -1,3 +1,7 @@
+/**
+ * Remove a pasta .next para corrigir cache corrompido do Next.js.
+ * Usado por: npm run clean e npm run dev:clean
+ */
 import { existsSync, rmSync } from "node:fs";
 import { join } from "node:path";
 

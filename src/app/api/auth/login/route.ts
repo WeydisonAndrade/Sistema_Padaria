@@ -1,8 +1,13 @@
+/**
+ * Autenticação do admin: login com e-mail/senha e logout (remoção do cookie).
+ */
+
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { createSession } from "@/lib/auth";
 
+// --- POST: valida credenciais e define cookie de sessão ---
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
@@ -51,6 +56,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// --- DELETE: encerra sessão removendo o cookie ---
 export async function DELETE() {
   const response = NextResponse.json({ success: true });
   response.cookies.delete("admin_session");

@@ -1,3 +1,8 @@
+/**
+ * Layout compartilhado do painel administrativo.
+ * Exibe sidebar de navegação, logout e área de conteúdo; omite o chrome na página de login.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -13,6 +18,7 @@ import {
   ClipboardList,
 } from "lucide-react";
 
+// --- Itens de navegação do menu lateral ---
 const navItems = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/produtos", label: "Cadastro de Produtos", icon: Package },
@@ -26,18 +32,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router = useRouter();
   const isLoginPage = pathname === "/admin/login";
 
+  // --- Logout: invalida sessão e redireciona para login ---
   async function handleLogout() {
     await fetch("/api/auth/login", { method: "DELETE" });
     router.push("/admin/login");
     router.refresh();
   }
 
+  // --- Página de login: renderiza apenas o conteúdo, sem sidebar ---
   if (isLoginPage) {
     return <>{children}</>;
   }
 
   return (
     <div className="flex min-h-screen bg-background">
+      {/* --- Sidebar desktop: logo, menu e ações --- */}
       <aside className="hidden w-64 flex-col border-r border-border bg-card md:flex">
         <div className="border-b border-border p-6">
           <div className="flex items-center gap-2">
@@ -94,6 +103,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       </aside>
 
+      {/* --- Área principal: header mobile e conteúdo das páginas --- */}
       <div className="flex flex-1 flex-col">
         <header className="flex items-center justify-between border-b border-border bg-card px-4 py-4 md:hidden">
           <p className="font-bold">Admin</p>

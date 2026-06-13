@@ -1,7 +1,14 @@
 "use client";
 
+/**
+ * Wrapper client-side que carrega os gráficos do dashboard de forma dinâmica,
+ * exibindo skeleton de loading enquanto o bundle é baixado.
+ */
+
 import dynamic from "next/dynamic";
 import type { MonthlyRevenue, TopProduct } from "@/lib/dashboard";
+
+// --- Importação dinâmica com fallback de carregamento ---
 
 const DashboardCharts = dynamic(() => import("@/components/admin/DashboardCharts"), {
   ssr: false,
@@ -14,6 +21,8 @@ const DashboardCharts = dynamic(() => import("@/components/admin/DashboardCharts
     </div>
   ),
 });
+
+// --- Tipos ---
 
 interface DashboardChartsClientProps {
   monthlyRevenue: MonthlyRevenue[];

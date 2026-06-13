@@ -1,3 +1,8 @@
+/**
+ * Página de checkout do cliente.
+ * Coleta dados do comprador, envia pedido à API e redireciona para confirmação.
+ */
+
 "use client";
 
 import { useState } from "react";
@@ -19,6 +24,7 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // --- Aguarda hidratação do carrinho antes de renderizar ---
   if (!isReady) {
     return <CartLoading />;
   }
@@ -37,6 +43,7 @@ export default function CheckoutPage() {
     );
   }
 
+  // --- Submissão: cria pedido via POST /api/orders e limpa o carrinho ---
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -191,6 +198,7 @@ export default function CheckoutPage() {
           </p>
         </form>
 
+        {/* --- Resumo lateral dos itens e total --- */}
         <div className="lg:col-span-2">
           <div className="sticky top-24 rounded-2xl border border-border bg-card p-6 shadow-sm">
             <h2 className="mb-4 font-display text-lg font-semibold">Resumo</h2>

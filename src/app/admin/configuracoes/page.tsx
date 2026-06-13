@@ -1,3 +1,8 @@
+/**
+ * Página de configurações da padaria no admin.
+ * Edita nome, contato, horário e coordenadas exibidos no site do cliente.
+ */
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -12,6 +17,7 @@ export default function AdminSettingsPage() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
 
+  // --- Montagem: verifica autenticação e carrega configurações ---
   useEffect(() => {
     async function loadSettings() {
       const authRes = await fetch("/api/auth/me");
@@ -29,6 +35,7 @@ export default function AdminSettingsPage() {
     loadSettings();
   }, [router]);
 
+  // --- Salva configurações via PUT /api/settings ---
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!form) return;

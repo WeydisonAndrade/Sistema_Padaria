@@ -1,3 +1,8 @@
+/**
+ * Página inicial do site da padaria.
+ * Exibe hero, diferenciais, produtos em destaque, informações e botão flutuante do WhatsApp.
+ */
+
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Clock, MapPin, Sparkles, ChefHat, Heart } from "lucide-react";
@@ -9,6 +14,7 @@ import { BAKERY_NAME, BAKERY_DESCRIPTION, BAKERY_TAGLINE } from "@/lib/constants
 import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 
+// --- Card reutilizável para blocos de informação (horário, localização) ---
 function InfoCard({
   icon: Icon,
   title,
@@ -33,6 +39,7 @@ function InfoCard({
   );
 }
 
+// --- Busca configurações da padaria e produtos em destaque no servidor ---
 export default async function HomePage() {
   const [settings, featuredProducts] = await Promise.all([
     prisma.bakerySettings.findUnique({ where: { id: "default" } }),
@@ -48,7 +55,7 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Hero */}
+      {/* --- Banner principal com CTA para cardápio e WhatsApp --- */}
       <section className="hero-gradient bg-grain relative overflow-hidden">
         <div className="absolute -right-20 -top-20 h-80 w-80 rounded-full bg-gold/10 blur-3xl" />
         <div className="absolute -bottom-10 -left-10 h-60 w-60 rounded-full bg-primary/10 blur-3xl" />
@@ -109,7 +116,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Diferenciais */}
+      {/* --- Diferenciais da padaria (tradição, ingredientes, fornada) --- */}
       <section className="border-y border-border bg-card py-12">
         <div className="mx-auto grid max-w-6xl gap-6 px-4 sm:grid-cols-3">
           {[
@@ -128,7 +135,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Destaques */}
+      {/* --- Grade de produtos em destaque --- */}
       <section className="mx-auto max-w-6xl px-4 py-20">
         <div className="mb-12 text-center">
           <p className="mb-2 text-xs font-medium tracking-widest text-gold uppercase">Cardápio</p>
@@ -163,7 +170,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Info */}
+      {/* --- Horário de funcionamento e localização --- */}
       <section className="bg-secondary/60 py-12 md:py-20">
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 px-4 sm:grid-cols-2 sm:gap-6">
           <InfoCard icon={Clock} title="Horário de Funcionamento">

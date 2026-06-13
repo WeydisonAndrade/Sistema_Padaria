@@ -1,6 +1,13 @@
 "use client";
 
+/**
+ * Seção de mapa na página de contato: carrega o mapa dinamicamente
+ * e oferece link externo para abrir a localização no Google Maps.
+ */
+
 import dynamic from "next/dynamic";
+
+// --- Carregamento dinâmico do mapa (sem SSR) ---
 
 const BakeryMap = dynamic(() => import("@/components/BakeryMap"), {
   ssr: false,
@@ -10,6 +17,8 @@ const BakeryMap = dynamic(() => import("@/components/BakeryMap"), {
     </div>
   ),
 });
+
+// --- Tipos ---
 
 interface ContactMapSectionProps {
   latitude: number;
@@ -32,6 +41,7 @@ export default function ContactMapSection({
         name={name}
         address={address}
       />
+      {/* --- Link para abrir no Google Maps --- */}
       <a
         href={`https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`}
         target="_blank"

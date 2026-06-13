@@ -1,8 +1,15 @@
 "use client";
 
+/**
+ * Imagem otimizada de produto com tratamento de erro:
+ * exibe placeholder quando a URL da imagem falha ao carregar.
+ */
+
 import { useState } from "react";
 import Image from "next/image";
 import { ImageOff } from "lucide-react";
+
+// --- Tipos ---
 
 interface ProductImageProps {
   src: string;
@@ -17,6 +24,7 @@ export default function ProductImage({
 }: ProductImageProps) {
   const [error, setError] = useState(false);
 
+  // --- Fallback quando a imagem não carrega ---
   if (error) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-2 bg-secondary text-muted">

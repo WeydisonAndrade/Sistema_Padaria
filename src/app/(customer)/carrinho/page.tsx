@@ -1,3 +1,8 @@
+/**
+ * Página do carrinho de compras do cliente.
+ * Permite revisar itens, alterar quantidades e seguir para o checkout.
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -10,10 +15,12 @@ import { BAKERY_TAGLINE } from "@/lib/constants";
 export default function CartPage() {
   const { items, subtotal, itemCount, updateQuantity, removeItem, isReady } = useCart();
 
+  // --- Aguarda hidratação do carrinho (localStorage) ---
   if (!isReady) {
     return <CartLoading />;
   }
 
+  // --- Estado vazio: incentiva o cliente a ver o cardápio ---
   if (items.length === 0) {
     return (
       <>
@@ -130,7 +137,7 @@ export default function CartPage() {
         </div>
       </div>
 
-      {/* Barra fixa no mobile */}
+      {/* --- Barra fixa de subtotal e checkout (mobile) --- */}
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 p-4 shadow-[0_-8px_30px_rgba(44,24,16,0.12)] backdrop-blur-md md:hidden">
         <div className="mx-auto flex max-w-3xl items-center gap-4">
           <div className="min-w-0 flex-1">

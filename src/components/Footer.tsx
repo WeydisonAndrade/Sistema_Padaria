@@ -1,14 +1,21 @@
+/**
+ * Rodapé global do site com branding da padaria, links de navegação,
+ * horário de funcionamento e aviso de copyright.
+ */
+
 import Link from "next/link";
 import { BAKERY_NAME, BAKERY_TAGLINE } from "@/lib/constants";
 
 export default function Footer() {
   return (
     <footer className="relative overflow-hidden bg-accent text-white">
+      {/* --- Elementos decorativos de fundo --- */}
       <div className="absolute inset-0 bg-grain opacity-30" />
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-gold to-transparent" />
 
       <div className="relative mx-auto max-w-6xl px-4 py-14">
         <div className="grid gap-10 md:grid-cols-3">
+          {/* --- Coluna: identidade e descrição --- */}
           <div>
             <div className="mb-4 flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full border border-gold/50 bg-primary">
@@ -26,6 +33,7 @@ export default function Footer() {
             </p>
           </div>
 
+          {/* --- Coluna: links de navegação --- */}
           <div>
             <h3 className="mb-4 font-display text-sm font-semibold tracking-widest text-gold uppercase">
               Navegação
@@ -43,6 +51,7 @@ export default function Footer() {
             </div>
           </div>
 
+          {/* --- Coluna: horário de funcionamento --- */}
           <div>
             <h3 className="mb-4 font-display text-sm font-semibold tracking-widest text-gold uppercase">
               Horário
@@ -60,6 +69,7 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* --- Faixa inferior: copyright --- */}
         <div className="mt-12 border-t border-white/10 pt-8 text-center">
           <p className="text-xs text-white/50">
             © {new Date().getFullYear()} {BAKERY_NAME}. Todos os direitos reservados.

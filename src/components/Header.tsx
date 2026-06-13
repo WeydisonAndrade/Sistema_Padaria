@@ -1,11 +1,18 @@
 "use client";
 
+/**
+ * Cabeçalho sticky do site com navegação desktop, menu mobile,
+ * botão do carrinho e link para o painel admin quando autenticado.
+ */
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { BAKERY_NAME, BAKERY_TAGLINE } from "@/lib/constants";
 import CartButton from "@/components/CartButton";
+
+// --- Links principais de navegação ---
 
 const navLinks = [
   { href: "/", label: "Início" },
@@ -19,6 +26,7 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
+  // --- Verifica sessão admin ao mudar de rota ---
   useEffect(() => {
     async function checkAdminSession() {
       try {
@@ -32,10 +40,12 @@ export default function Header() {
     checkAdminSession();
   }, [pathname]);
 
+  // --- Fecha o menu mobile ao navegar ---
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
 
+  // --- Bloqueia scroll e escuta tecla Escape com menu aberto ---
   useEffect(() => {
     if (!menuOpen) return;
 
@@ -54,6 +64,7 @@ export default function Header() {
 
   return (
     <>
+      {/* --- Barra superior: logo, nav desktop e carrinho --- */}
       <header className="sticky top-0 z-50 border-b border-border/60 bg-card/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
           <Link href="/" className="group flex items-center gap-3">
@@ -98,6 +109,7 @@ export default function Header() {
             <CartButton />
           </nav>
 
+          {/* --- Controles mobile: carrinho e botão do menu --- */}
           <div className="flex items-center gap-1 md:hidden">
             <CartButton />
             <button
@@ -113,6 +125,7 @@ export default function Header() {
         </div>
       </header>
 
+      {/* --- Drawer de navegação mobile --- */}
       {menuOpen && (
         <div className="fixed inset-0 z-[60] md:hidden">
           <button

@@ -1,3 +1,8 @@
+/**
+ * Página de cardápio do cliente.
+ * Lista produtos ativos com filtro por categoria e integração ao carrinho/WhatsApp.
+ */
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -12,6 +17,7 @@ export default function ProductsPage() {
   const [category, setCategory] = useState("Todos");
   const [loading, setLoading] = useState(true);
 
+  // --- Recarrega produtos e configurações ao mudar a categoria ---
   useEffect(() => {
     async function loadData() {
       setLoading(true);

@@ -1,10 +1,17 @@
+/**
+ * Agregação de métricas do painel admin: resumo de produtos,
+ * receita mensal dos últimos 6 meses e produtos mais vendidos.
+ */
+
 import { prisma } from "@/lib/prisma";
 
+// --- Rótulos de mês para exibição no gráfico ---
 const MONTH_LABELS = [
   "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
   "Jul", "Ago", "Set", "Out", "Nov", "Dez",
 ];
 
+// --- Tipos retornados pelo dashboard ---
 export interface MonthlyRevenue {
   month: string;
   revenue: number;
@@ -35,6 +42,7 @@ export interface DashboardData {
   bestSeller: TopProduct | null;
 }
 
+// --- Helpers de chave e rótulo por mês ---
 function getMonthKey(date: Date): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
 }
@@ -43,6 +51,7 @@ function formatMonthLabel(date: Date): string {
   return `${MONTH_LABELS[date.getMonth()]}/${String(date.getFullYear()).slice(-2)}`;
 }
 
+// --- Montagem dos dados do dashboard ---
 export async function getDashboardData(): Promise<DashboardData> {
   const now = new Date();
   const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);

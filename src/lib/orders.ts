@@ -1,5 +1,11 @@
+/**
+ * Regras de negócio para pedidos online: criação com reserva de estoque
+ * e atualização de status (incluindo devolução ao cancelar).
+ */
+
 import { prisma } from "@/lib/prisma";
 
+// --- Erro de domínio ---
 export class OrderError extends Error {
   constructor(message: string) {
     super(message);
@@ -7,6 +13,7 @@ export class OrderError extends Error {
   }
 }
 
+// --- Tipos de entrada e status ---
 export interface OrderItemInput {
   productId: string;
   quantity: number;
@@ -22,6 +29,7 @@ export interface CreateOrderInput {
 
 export type OrderStatus = "PENDING" | "CONFIRMED" | "CANCELLED";
 
+// --- Geração sequencial do número do pedido (ex.: TP20250613-0001) ---
 async function generateOrderNumber(
   tx: Parameters<Parameters<typeof prisma.$transaction>[0]>[0]
 ): Promise<string> {
@@ -33,6 +41,7 @@ async function generateOrderNumber(
   return `${prefix}-${String(count + 1).padStart(4, "0")}`;
 }
 
+// --- Criação de pedido com validação e débito de estoque ---
 export async function createOrder(input: CreateOrderInput) {
   const { customerName, customerPhone, customerEmail, notes, items } = input;
 
@@ -129,6 +138,7 @@ export async function createOrder(input: CreateOrderInput) {
   });
 }
 
+// --- Atualização de status com restauração de estoque ao cancelar ---
 export async function updateOrderStatus(orderId: string, status: OrderStatus) {
   if (!["PENDING", "CONFIRMED", "CANCELLED"].includes(status)) {
     throw new OrderError("Status inválido.");

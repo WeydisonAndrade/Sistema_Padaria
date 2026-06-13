@@ -1,3 +1,7 @@
+/**
+ * Popula o banco com dados iniciais: admin, configurações da padaria,
+ * produtos de exemplo e vendas fictícias para o dashboard.
+ */
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
@@ -8,6 +12,7 @@ async function main() {
   const password = process.env.ADMIN_PASSWORD || "admin123";
   const hashedPassword = await bcrypt.hash(password, 10);
 
+  // --- Conta administrativa padrão ---
   await prisma.admin.upsert({
     where: { email },
     update: {},
@@ -18,6 +23,7 @@ async function main() {
     },
   });
 
+  // --- Configurações da padaria (nome, endereço, mapa, WhatsApp) ---
   await prisma.bakerySettings.upsert({
     where: { id: "default" },
     update: {
@@ -39,6 +45,7 @@ async function main() {
     },
   });
 
+  // --- Catálogo inicial de produtos (upsert por código) ---
   const products = [
     {
       code: "PAO001",
@@ -116,6 +123,7 @@ async function main() {
   console.log(`Admin: ${email} / ${password}`);
 }
 
+/** Gera ~180 vendas nos últimos 6 meses para alimentar os gráficos do dashboard */
 async function seedSales() {
   const saleCount = await prisma.sale.count();
   if (saleCount > 0) return;
@@ -141,6 +149,7 @@ async function seedSales() {
     { code: "BEB001", qtyPerMonth: [150, 160, 170, 180, 190, 200] },
   ];
 
+  // Distribui vendas em lotes ao longo de cada um dos 6 meses
   for (let m = 0; m < 6; m++) {
     const monthDate = new Date(now.getFullYear(), now.getMonth() - (5 - m), 1);
 

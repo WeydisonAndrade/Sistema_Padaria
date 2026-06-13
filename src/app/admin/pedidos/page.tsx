@@ -1,3 +1,8 @@
+/**
+ * Página de gestão de pedidos online no admin.
+ * Lista pedidos dos clientes e permite alterar status (cancelamento restaura estoque).
+ */
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -11,6 +16,7 @@ import {
 } from "@/lib/utils";
 import type { Order } from "@/types";
 
+// --- Opções de status disponíveis para atualização ---
 const STATUS_OPTIONS = [
   { value: "PENDING", label: "Pendente" },
   { value: "CONFIRMED", label: "Confirmado" },
@@ -28,6 +34,7 @@ export default function AdminOrdersPage() {
     loadOrders();
   }, [router]);
 
+  // --- Carrega todos os pedidos (requer autenticação) ---
   async function loadOrders() {
     setLoading(true);
     const authRes = await fetch("/api/auth/me");
@@ -42,6 +49,7 @@ export default function AdminOrdersPage() {
     setLoading(false);
   }
 
+  // --- Atualiza status do pedido via PATCH /api/orders/:id ---
   async function handleStatusChange(orderId: string, status: string) {
     setUpdatingId(orderId);
     setError("");

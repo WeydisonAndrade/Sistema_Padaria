@@ -1,3 +1,9 @@
+/**
+ * Utilitários compartilhados: formatação, links WhatsApp,
+ * categorias de produto, rótulos de status e serialização para API.
+ */
+
+// --- Formatação de valores ---
 export function formatPrice(value: number): string {
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
@@ -5,6 +11,7 @@ export function formatPrice(value: number): string {
   }).format(value);
 }
 
+// --- WhatsApp: número, link e mensagens pré-formatadas ---
 export function formatWhatsAppNumber(phone: string): string {
   return phone.replace(/\D/g, "");
 }
@@ -29,6 +36,7 @@ export function buildGeneralWhatsAppMessage(bakeryName: string): string {
   return `Olá! Vim pelo site da ${bakeryName} e gostaria de fazer um pedido.`;
 }
 
+// --- Categorias fixas de produto ---
 export const PRODUCT_CATEGORIES = [
   "Pães",
   "Bolos",
@@ -40,6 +48,7 @@ export const PRODUCT_CATEGORIES = [
 
 export type ProductCategory = (typeof PRODUCT_CATEGORIES)[number];
 
+// --- Formatação de datas ---
 export function formatDate(value: string | Date | null): string {
   if (!value) return "—";
   const date = typeof value === "string" ? new Date(value) : value;
@@ -52,6 +61,7 @@ export function formatDateInput(value: string | Date | null): string {
   return date.toISOString().split("T")[0];
 }
 
+// --- Rótulos e cores de status (produto e pedido) ---
 export function getProductStatusLabel(active: boolean): string {
   return active ? "Ativo" : "Inativo";
 }
@@ -83,6 +93,7 @@ export function buildOrderWhatsAppMessage(
   return `Olá! Sou ${customerName}. Acabei de fazer o pedido ${orderNumber} no site da ${bakeryName} no valor de ${formatPrice(total)}. Gostaria de combinar a forma de pagamento e entrega.`;
 }
 
+// --- Serialização de datas do produto para resposta JSON ---
 export function serializeProduct<T extends {
   expirationDate: Date | string | null;
   createdAt: Date | string;

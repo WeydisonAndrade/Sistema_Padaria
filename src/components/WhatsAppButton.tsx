@@ -1,5 +1,12 @@
+/**
+ * Link estilizado que abre uma conversa no WhatsApp
+ * com mensagem pré-preenchida para pedidos ou contato.
+ */
+
 import { MessageCircle } from "lucide-react";
 import { buildWhatsAppLink } from "@/lib/utils";
+
+// --- Tipos ---
 
 interface WhatsAppButtonProps {
   phone: string;
@@ -18,6 +25,7 @@ export default function WhatsAppButton({
 }: WhatsAppButtonProps) {
   const href = buildWhatsAppLink(phone, message);
 
+  // --- Estilos por variante visual ---
   const variants = {
     primary:
       "bg-[#25D366] text-white hover:bg-[#1da851] px-5 py-2.5 rounded-lg font-medium inline-flex items-center gap-2 transition-all hover:shadow-md",

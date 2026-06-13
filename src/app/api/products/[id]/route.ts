@@ -1,9 +1,14 @@
+/**
+ * Operações em produto individual: consulta, atualização e exclusão.
+ */
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 
 type RouteParams = { params: Promise<{ id: string }> };
 
+// --- GET: busca produto por ID (público) ---
 export async function GET(_request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
@@ -22,6 +27,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
   }
 }
 
+// --- PUT: atualiza produto (requer sessão admin) ---
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
     const session = await getSession();
@@ -72,6 +78,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   }
 }
 
+// --- DELETE: remove produto (requer sessão admin) ---
 export async function DELETE(_request: NextRequest, { params }: RouteParams) {
   try {
     const session = await getSession();

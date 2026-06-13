@@ -1,3 +1,8 @@
+/**
+ * Página de cadastro e gestão de produtos no admin.
+ * Permite criar, editar, excluir, consultar e filtrar produtos via API.
+ */
+
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
@@ -13,6 +18,7 @@ import {
 } from "@/lib/utils";
 import type { Product } from "@/types";
 
+// --- Tipos e estado inicial do formulário de produto ---
 interface ProductForm {
   code: string;
   name: string;
@@ -49,6 +55,7 @@ export default function AdminProductsPage() {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("Todos");
 
+  // --- Montagem: verifica autenticação e carrega produtos ---
   useEffect(() => {
     async function checkAuthAndLoad() {
       const authRes = await fetch("/api/auth/me");
@@ -62,6 +69,7 @@ export default function AdminProductsPage() {
     checkAuthAndLoad();
   }, [router]);
 
+  // --- Busca produtos na API (ativos e inativos) ---
   async function loadProducts() {
     setLoading(true);
     const res = await fetch("/api/products?active=false");
@@ -70,6 +78,7 @@ export default function AdminProductsPage() {
     setLoading(false);
   }
 
+  // --- Filtro local por busca textual e categoria ---
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
       const term = search.toLowerCase();
@@ -118,6 +127,7 @@ export default function AdminProductsPage() {
     setViewingProduct(product);
   }
 
+  // --- Ações do formulário: criar, editar e excluir produto ---
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
@@ -218,6 +228,7 @@ export default function AdminProductsPage() {
 
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          {/* --- Modal de cadastro/edição de produto --- */}
           <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-card p-6 shadow-xl">
             <div className="mb-6 flex items-center justify-between">
               <h2 className="font-display text-lg font-bold">

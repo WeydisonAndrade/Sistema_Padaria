@@ -1,7 +1,12 @@
+/**
+ * Configurações da padaria: leitura pública e atualização pelo admin.
+ */
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 
+// --- GET: retorna configurações (cria registro padrão se não existir) ---
 export async function GET() {
   try {
     let settings = await prisma.bakerySettings.findUnique({
@@ -23,6 +28,7 @@ export async function GET() {
   }
 }
 
+// --- PUT: atualiza ou cria configurações (requer sessão admin) ---
 export async function PUT(request: NextRequest) {
   try {
     const session = await getSession();

@@ -1,3 +1,8 @@
+/**
+ * Página de login do painel administrativo.
+ * Autentica o admin via API e redireciona para o dashboard em caso de sucesso.
+ */
+
 "use client";
 
 import { useState } from "react";
@@ -13,6 +18,7 @@ export default function AdminLoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // --- Submissão do formulário: POST /api/auth/login ---
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");

@@ -1,3 +1,8 @@
+/**
+ * Dashboard do painel administrativo.
+ * Exibe métricas de faturamento, gráficos, resumo de produtos e lista dos mais recentes.
+ */
+
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import {
@@ -15,9 +20,11 @@ import DashboardChartsClient from "@/components/admin/DashboardChartsClient";
 import { formatPrice, getProductStatusLabel } from "@/lib/utils";
 
 export default async function AdminDashboardPage() {
+  // --- Verificação de sessão: redireciona se não autenticado ---
   const session = await getSession();
   if (!session) redirect("/admin/login");
 
+  // --- Carregamento paralelo: métricas do dashboard e produtos recentes ---
   const [dashboard, recentProducts] = await Promise.all([
     getDashboardData(),
     prisma.product.findMany({
@@ -26,6 +33,7 @@ export default async function AdminDashboardPage() {
     }),
   ]);
 
+  // --- Cards de estatísticas exibidos no topo da página ---
   const stats = [
     {
       label: "Faturamento do Mês",
@@ -102,6 +110,7 @@ export default async function AdminDashboardPage() {
         currentMonthRevenue={dashboard.summary.currentMonthRevenue}
       />
 
+      {/* --- Tabela de produtos atualizados recentemente --- */}
       <div className="rounded-2xl border border-border bg-card shadow-sm">
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <h2 className="font-bold text-foreground">Produtos Recentes</h2>

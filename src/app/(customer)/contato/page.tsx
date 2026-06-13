@@ -1,3 +1,8 @@
+/**
+ * Página de contato e localização da padaria.
+ * Exibe mapa interativo, informações de contato e botão para WhatsApp.
+ */
+
 import { MapPin, Phone, Clock, MessageCircle } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -5,6 +10,7 @@ import ContactMapSection from "@/components/ContactMapSection";
 import { buildGeneralWhatsAppMessage } from "@/lib/utils";
 import { BAKERY_NAME, BAKERY_TAGLINE } from "@/lib/constants";
 
+// --- Busca configurações da padaria no servidor (endereço, mapa, WhatsApp) ---
 export default async function ContactPage() {
   const settings = await prisma.bakerySettings.findUnique({
     where: { id: "default" },
@@ -32,6 +38,7 @@ export default async function ContactPage() {
 
       <div className="mx-auto max-w-6xl px-4 py-12">
         <div className="grid gap-8 lg:grid-cols-2">
+          {/* --- Mapa com localização da padaria --- */}
           <div className="overflow-hidden rounded-2xl border border-border shadow-sm">
             <ContactMapSection
               latitude={latitude}
@@ -41,6 +48,7 @@ export default async function ContactPage() {
             />
           </div>
 
+          {/* --- Informações de contato e CTA do WhatsApp --- */}
           <div className="space-y-6">
             <div className="rounded-2xl border border-border bg-card p-7 shadow-sm">
               <h2 className="mb-6 font-display text-2xl font-semibold text-foreground">
