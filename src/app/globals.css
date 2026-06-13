@@ -107,3 +107,29 @@ h4 {
 .animate-fade-up {
   animation: fade-up 0.6s ease forwards;
 }
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-overlay-in {
+  animation: fade-in 0.25s ease forwards;
+}
+
+.animate-drawer-in {
+  animation: slide-in-right 0.3s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}

@@ -54,7 +54,7 @@ export default function CartPage() {
         </p>
       </div>
 
-      <div className="mx-auto max-w-3xl px-4 py-12">
+      <div className="mx-auto max-w-3xl px-4 py-12 pb-32 md:pb-12">
         <div className="space-y-4">
           {items.map((item) => (
             <div
@@ -72,26 +72,26 @@ export default function CartPage() {
               </div>
 
               <div className="flex items-center justify-between gap-4 sm:justify-end">
-                <div className="flex items-center gap-2 rounded-full border border-border bg-background px-2 py-1">
+                <div className="flex items-center gap-1 rounded-full border border-border bg-background p-1">
                   <button
                     type="button"
                     onClick={() => updateQuantity(item.productId, item.quantity - 1)}
-                    className="rounded-full p-1.5 text-muted hover:bg-secondary hover:text-primary"
+                    className="flex h-11 w-11 items-center justify-center rounded-full text-muted transition-colors hover:bg-secondary hover:text-primary active:bg-secondary/80"
                     aria-label="Diminuir quantidade"
                   >
-                    <Minus className="h-4 w-4" />
+                    <Minus className="h-5 w-5" />
                   </button>
-                  <span className="min-w-8 text-center text-sm font-medium">
+                  <span className="min-w-10 text-center text-base font-semibold tabular-nums">
                     {item.quantity}
                   </span>
                   <button
                     type="button"
                     onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                     disabled={item.quantity >= item.stockQuantity}
-                    className="rounded-full p-1.5 text-muted hover:bg-secondary hover:text-primary disabled:opacity-40"
+                    className="flex h-11 w-11 items-center justify-center rounded-full text-muted transition-colors hover:bg-secondary hover:text-primary active:bg-secondary/80 disabled:opacity-40"
                     aria-label="Aumentar quantidade"
                   >
-                    <Plus className="h-4 w-4" />
+                    <Plus className="h-5 w-5" />
                   </button>
                 </div>
 
@@ -102,9 +102,9 @@ export default function CartPage() {
                   <button
                     type="button"
                     onClick={() => removeItem(item.productId)}
-                    className="mt-1 inline-flex items-center gap-1 text-xs text-red-600 hover:underline"
+                    className="mt-1 inline-flex min-h-11 items-center gap-1.5 px-2 text-sm text-red-600 hover:underline"
                   >
-                    <Trash2 className="h-3 w-3" />
+                    <Trash2 className="h-4 w-4" />
                     Remover
                   </button>
                 </div>
@@ -113,7 +113,7 @@ export default function CartPage() {
           ))}
         </div>
 
-        <div className="mt-8 rounded-2xl border border-border bg-card p-6 shadow-sm">
+        <div className="mt-8 hidden rounded-2xl border border-border bg-card p-6 shadow-sm md:block">
           <div className="mb-6 flex items-center justify-between">
             <span className="text-muted">Subtotal</span>
             <span className="font-display text-2xl font-bold text-primary">
@@ -123,6 +123,25 @@ export default function CartPage() {
           <Link
             href="/checkout"
             className="flex w-full items-center justify-center gap-2 rounded-full bg-primary py-3.5 font-medium text-white transition-colors hover:bg-primary-dark"
+          >
+            Finalizar pedido
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </div>
+
+      {/* Barra fixa no mobile */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 p-4 shadow-[0_-8px_30px_rgba(44,24,16,0.12)] backdrop-blur-md md:hidden">
+        <div className="mx-auto flex max-w-3xl items-center gap-4">
+          <div className="min-w-0 flex-1">
+            <p className="text-xs text-muted">Subtotal</p>
+            <p className="font-display text-xl font-bold text-primary">
+              {formatPrice(subtotal)}
+            </p>
+          </div>
+          <Link
+            href="/checkout"
+            className="flex shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-medium text-white shadow-md shadow-primary/20 transition-colors hover:bg-primary-dark active:scale-[0.98]"
           >
             Finalizar pedido
             <ArrowRight className="h-4 w-4" />

@@ -24,7 +24,7 @@ export default function WhatsAppButton({
     outline:
       "border-2 border-primary/30 text-primary bg-card hover:bg-primary hover:text-white hover:border-primary px-6 py-3 rounded-full font-medium inline-flex items-center gap-2 transition-all",
     floating:
-      "fixed bottom-6 right-6 z-50 bg-[#25D366] text-white hover:bg-[#1da851] p-4 rounded-full shadow-xl shadow-[#25D366]/30 hover:scale-110 transition-all",
+      "fixed bottom-24 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/10 transition-all hover:bg-[#1da851] hover:scale-105 active:scale-95 md:bottom-5 md:right-5",
   };
 
   return (
@@ -35,7 +35,7 @@ export default function WhatsAppButton({
       className={`${variants[variant]} ${className}`}
       aria-label={label}
     >
-      <MessageCircle className={variant === "floating" ? "h-6 w-6" : "h-5 w-5"} />
+      <MessageCircle className={variant === "floating" ? "h-5 w-5" : "h-5 w-5"} />
       {variant !== "floating" && label}
     </a>
   );
