@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BAKERY_NAME, BAKERY_TAGLINE } from "@/lib/constants";
 
 const navLinks = [
@@ -15,6 +15,20 @@ const navLinks = [
 export default function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    async function checkAdminSession() {
+      try {
+        const res = await fetch("/api/auth/me");
+        setIsAdmin(res.ok);
+      } catch {
+        setIsAdmin(false);
+      }
+    }
+
+    checkAdminSession();
+  }, [pathname]);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-card/90 backdrop-blur-md">
@@ -50,12 +64,14 @@ export default function Header() {
               )}
             </Link>
           ))}
-          <Link
-            href="/admin/login"
-            className="ml-3 rounded-full border border-primary/20 bg-primary px-5 py-2 text-sm font-medium text-white transition-all hover:bg-primary-dark hover:shadow-md"
-          >
-            Admin
-          </Link>
+          {isAdmin && (
+            <Link
+              href="/admin/dashboard"
+              className="ml-3 rounded-full border border-primary/20 bg-primary px-5 py-2 text-sm font-medium text-white transition-all hover:bg-primary-dark hover:shadow-md"
+            >
+              Admin
+            </Link>
+          )}
         </nav>
 
         <button
@@ -85,13 +101,15 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
-            <Link
-              href="/admin/login"
-              onClick={() => setMenuOpen(false)}
-              className="mt-2 rounded-xl bg-primary px-4 py-3 text-center text-sm font-medium text-white"
-            >
-              Admin
-            </Link>
+            {isAdmin && (
+              <Link
+                href="/admin/dashboard"
+                onClick={() => setMenuOpen(false)}
+                className="mt-2 rounded-xl bg-primary px-4 py-3 text-center text-sm font-medium text-white"
+              >
+                Admin
+              </Link>
+            )}
           </div>
         </nav>
       )}
