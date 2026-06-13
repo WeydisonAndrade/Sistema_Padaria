@@ -87,10 +87,12 @@ h4 {
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-.card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(44, 24, 16, 0.12);
-  border-color: var(--gold-light);
+@media (hover: hover) {
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(44, 24, 16, 0.12);
+    border-color: var(--gold-light);
+  }
 }
 
 @keyframes fade-up {

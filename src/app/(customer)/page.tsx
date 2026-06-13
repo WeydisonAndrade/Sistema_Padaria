@@ -6,6 +6,32 @@ import ProductCard from "@/components/ProductCard";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { buildGeneralWhatsAppMessage, serializeProduct } from "@/lib/utils";
 import { BAKERY_NAME, BAKERY_DESCRIPTION, BAKERY_TAGLINE } from "@/lib/constants";
+import type { ReactNode } from "react";
+import type { LucideIcon } from "lucide-react";
+
+function InfoCard({
+  icon: Icon,
+  title,
+  children,
+}: {
+  icon: LucideIcon;
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="card-hover flex h-full w-full flex-col gap-4 rounded-2xl border border-border bg-card p-5 shadow-sm sm:flex-row sm:items-start sm:gap-5 sm:p-6 md:p-7">
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 sm:h-14 sm:w-14">
+        <Icon className="h-6 w-6 text-primary" />
+      </div>
+      <div className="min-w-0 flex-1 text-muted">
+        <h3 className="font-display text-lg font-semibold leading-snug text-foreground sm:text-xl">
+          {title}
+        </h3>
+        <div className="mt-2 text-sm leading-relaxed sm:text-base">{children}</div>
+      </div>
+    </div>
+  );
+}
 
 export default async function HomePage() {
   const [settings, featuredProducts] = await Promise.all([
@@ -138,40 +164,34 @@ export default async function HomePage() {
       </section>
 
       {/* Info */}
-      <section className="bg-secondary/60 py-20">
-        <div className="mx-auto grid max-w-6xl gap-6 px-4 md:grid-cols-2">
-          <div className="card-hover flex gap-5 rounded-2xl border border-border bg-card p-7 shadow-sm">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
-              <Clock className="h-6 w-6 text-primary" />
+      <section className="bg-secondary/60 py-12 md:py-20">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 px-4 sm:grid-cols-2 sm:gap-6">
+          <InfoCard icon={Clock} title="Horário de Funcionamento">
+            <div className="space-y-1">
+              {(settings?.openingHours || "Seg-Sáb: 6h às 20h | Dom: 6h às 14h")
+                .split("|")
+                .map((line) => line.trim())
+                .filter(Boolean)
+                .map((line) => (
+                  <p key={line} className="break-words">
+                    {line}
+                  </p>
+                ))}
             </div>
-            <div>
-              <h3 className="font-display text-xl font-semibold text-foreground">
-                Horário de Funcionamento
-              </h3>
-              <p className="mt-2 leading-relaxed text-muted">
-                {settings?.openingHours || "Seg-Sáb: 6h às 20h | Dom: 6h às 14h"}
-              </p>
-            </div>
-          </div>
+          </InfoCard>
 
-          <div className="card-hover flex gap-5 rounded-2xl border border-border bg-card p-7 shadow-sm">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
-              <MapPin className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <h3 className="font-display text-xl font-semibold text-foreground">Localização</h3>
-              <p className="mt-2 leading-relaxed text-muted">
-                {settings?.address || "Av. Paulista, 1000 - São Paulo"}
-              </p>
-              <Link
-                href="/contato"
-                className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-primary-dark"
-              >
-                Ver no mapa
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-          </div>
+          <InfoCard icon={MapPin} title="Localização">
+            <p className="break-words">
+              {settings?.address || "Av. Paulista, 1000 - São Paulo"}
+            </p>
+            <Link
+              href="/contato"
+              className="mt-3 inline-flex min-h-11 items-center gap-1 text-sm font-medium text-primary hover:text-primary-dark"
+            >
+              Ver no mapa
+              <ArrowRight className="h-3.5 w-3.5 shrink-0" />
+            </Link>
+          </InfoCard>
         </div>
       </section>
 
