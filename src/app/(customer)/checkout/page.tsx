@@ -1,0 +1,218 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ArrowLeft, Loader2 } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
+import { formatPrice } from "@/lib/utils";
+import { BAKERY_TAGLINE } from "@/lib/constants";
+
+export default function CheckoutPage() {
+  const router = useRouter();
+  const { items, subtotal, clearCart } = useCart();
+  const [customerName, setCustomerName] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
+  const [notes, setNotes] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  if (items.length === 0) {
+    return (
+      <div className="mx-auto max-w-lg px-4 py-24 text-center">
+        <p className="font-display text-xl text-muted">Seu carrinho está vazio.</p>
+        <Link
+          href="/produtos"
+          className="mt-6 inline-block text-primary hover:underline"
+        >
+          Voltar aos produtos
+        </Link>
+      </div>
+    );
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerName,
+          customerPhone,
+          customerEmail,
+          notes,
+          items: items.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+          })),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Erro ao finalizar pedido.");
+        setLoading(false);
+        return;
+      }
+
+      const phone = customerPhone.replace(/\D/g, "");
+      clearCart();
+      router.push(
+        `/pedidos/confirmacao/${data.id}?phone=${encodeURIComponent(phone)}`
+      );
+    } catch {
+      setError("Erro de conexão. Tente novamente.");
+      setLoading(false);
+    }
+  }
+
+  return (
+    <>
+      <div className="hero-gradient border-b border-border py-16 text-center">
+        <p className="mb-2 text-xs font-medium tracking-widest text-gold uppercase">
+          {BAKERY_TAGLINE}
+        </p>
+        <h1 className="section-title font-display text-4xl font-bold text-foreground md:text-5xl">
+          Checkout
+        </h1>
+        <p className="mx-auto mt-8 max-w-md text-muted">
+          Preencha seus dados para concluir o pedido
+        </p>
+      </div>
+
+      <div className="mx-auto grid max-w-5xl gap-8 px-4 py-12 lg:grid-cols-5">
+        <form onSubmit={handleSubmit} className="space-y-5 lg:col-span-3">
+          <Link
+            href="/carrinho"
+            className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Voltar ao carrinho
+          </Link>
+
+          {error && (
+            <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
+              {error}
+            </div>
+          )}
+
+          <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+            <h2 className="mb-5 font-display text-xl font-semibold">Seus dados</h2>
+
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="name" className="mb-1 block text-sm font-medium">
+                  Nome completo *
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  required
+                  className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  placeholder="Seu nome"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="phone" className="mb-1 block text-sm font-medium">
+                  Telefone / WhatsApp *
+                </label>
+                <input
+                  id="phone"
+                  type="tel"
+                  value={customerPhone}
+                  onChange={(e) => setCustomerPhone(e.target.value)}
+                  required
+                  className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  placeholder="(11) 99999-9999"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="email" className="mb-1 block text-sm font-medium">
+                  E-mail (opcional)
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  value={customerEmail}
+                  onChange={(e) => setCustomerEmail(e.target.value)}
+                  className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  placeholder="seu@email.com"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="notes" className="mb-1 block text-sm font-medium">
+                  Observações (opcional)
+                </label>
+                <textarea
+                  id="notes"
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  rows={3}
+                  className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  placeholder="Horário preferido, endereço de entrega, etc."
+                />
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-primary py-3.5 font-medium text-white hover:bg-primary-dark disabled:opacity-50"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Processando…
+              </>
+            ) : (
+              `Confirmar pedido · ${formatPrice(subtotal)}`
+            )}
+          </button>
+
+          <p className="text-center text-xs text-muted">
+            Após confirmar, entraremos em contato para combinar pagamento e entrega.
+          </p>
+        </form>
+
+        <div className="lg:col-span-2">
+          <div className="sticky top-24 rounded-2xl border border-border bg-card p-6 shadow-sm">
+            <h2 className="mb-4 font-display text-lg font-semibold">Resumo</h2>
+            <div className="space-y-3">
+              {items.map((item) => (
+                <div
+                  key={item.productId}
+                  className="flex items-center justify-between text-sm"
+                >
+                  <span className="text-muted">
+                    {item.quantity}x {item.name}
+                  </span>
+                  <span className="font-medium">
+                    {formatPrice(item.price * item.quantity)}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 flex items-center justify-between border-t border-border pt-4">
+              <span className="font-semibold">Total</span>
+              <span className="font-display text-xl font-bold text-primary">
+                {formatPrice(subtotal)}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

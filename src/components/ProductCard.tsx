@@ -1,8 +1,10 @@
 "use client";
 
-import { Tag, Boxes } from "lucide-react";
+import { useState } from "react";
+import { Tag, Boxes, ShoppingCart, Check } from "lucide-react";
 import ProductImage from "./ProductImage";
 import WhatsAppButton from "./WhatsAppButton";
+import { useCart } from "@/contexts/CartContext";
 import { formatPrice, buildProductWhatsAppMessage } from "@/lib/utils";
 import type { Product } from "@/types";
 
@@ -12,8 +14,26 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, whatsapp }: ProductCardProps) {
+  const { addItem } = useCart();
+  const [added, setAdded] = useState(false);
   const message = buildProductWhatsAppMessage(product.name, product.price);
   const outOfStock = product.stockQuantity <= 0;
+
+  function handleAddToCart() {
+    addItem(
+      {
+        productId: product.id,
+        code: product.code,
+        name: product.name,
+        price: product.price,
+        imageUrl: product.imageUrl,
+        stockQuantity: product.stockQuantity,
+      },
+      1
+    );
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
+  }
 
   return (
     <article className="card-hover group overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
@@ -68,11 +88,32 @@ export default function ProductCard({ product, whatsapp }: ProductCardProps) {
             Indisponível
           </button>
         ) : (
-          <WhatsAppButton
-            phone={whatsapp}
-            message={message}
-            className="w-full justify-center rounded-full"
-          />
+          <div className="space-y-2">
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-primary py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-dark"
+            >
+              {added ? (
+                <>
+                  <Check className="h-4 w-4" />
+                  Adicionado!
+                </>
+              ) : (
+                <>
+                  <ShoppingCart className="h-4 w-4" />
+                  Adicionar ao carrinho
+                </>
+              )}
+            </button>
+            <WhatsAppButton
+              phone={whatsapp}
+              message={message}
+              label="Pedir pelo WhatsApp"
+              variant="outline"
+              className="w-full justify-center rounded-full py-2 text-sm"
+            />
+          </div>
         )}
       </div>
     </article>

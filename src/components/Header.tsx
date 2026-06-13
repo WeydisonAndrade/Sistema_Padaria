@@ -5,10 +5,12 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { BAKERY_NAME, BAKERY_TAGLINE } from "@/lib/constants";
+import CartButton from "@/components/CartButton";
 
 const navLinks = [
   { href: "/", label: "Início" },
   { href: "/produtos", label: "Produtos" },
+  { href: "/pedidos", label: "Meus Pedidos" },
   { href: "/contato", label: "Contato" },
 ];
 
@@ -72,16 +74,20 @@ export default function Header() {
               Admin
             </Link>
           )}
+          <CartButton />
         </nav>
 
-        <button
-          type="button"
-          className="rounded-lg p-2 text-foreground transition-colors hover:bg-secondary md:hidden"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Menu"
-        >
-          {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
+        <div className="flex items-center gap-1 md:hidden">
+          <CartButton />
+          <button
+            type="button"
+            className="rounded-lg p-2 text-foreground transition-colors hover:bg-secondary"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Menu"
+          >
+            {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
       </div>
 
       {menuOpen && (

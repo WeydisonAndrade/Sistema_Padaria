@@ -56,6 +56,33 @@ export function getProductStatusLabel(active: boolean): string {
   return active ? "Ativo" : "Inativo";
 }
 
+export function getOrderStatusLabel(status: string): string {
+  const labels: Record<string, string> = {
+    PENDING: "Pendente",
+    CONFIRMED: "Confirmado",
+    CANCELLED: "Cancelado",
+  };
+  return labels[status] ?? status;
+}
+
+export function getOrderStatusColor(status: string): string {
+  const colors: Record<string, string> = {
+    PENDING: "bg-amber-100 text-amber-800",
+    CONFIRMED: "bg-green-100 text-green-700",
+    CANCELLED: "bg-red-100 text-red-700",
+  };
+  return colors[status] ?? "bg-secondary text-foreground";
+}
+
+export function buildOrderWhatsAppMessage(
+  bakeryName: string,
+  orderNumber: string,
+  total: number,
+  customerName: string
+): string {
+  return `Olá! Sou ${customerName}. Acabei de fazer o pedido ${orderNumber} no site da ${bakeryName} no valor de ${formatPrice(total)}. Gostaria de combinar a forma de pagamento e entrega.`;
+}
+
 export function serializeProduct<T extends {
   expirationDate: Date | string | null;
   createdAt: Date | string;

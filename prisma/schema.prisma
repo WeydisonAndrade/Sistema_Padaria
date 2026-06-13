@@ -16,18 +16,19 @@ model Admin {
 }
 
 model Product {
-  id             String    @id @default(cuid())
-  code           String    @unique
+  id             String      @id @default(cuid())
+  code           String      @unique
   name           String
   category       String
   price          Float
-  stockQuantity  Int       @default(0)
+  stockQuantity  Int         @default(0)
   expirationDate DateTime?
   imageUrl       String?
-  active         Boolean   @default(true)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  active         Boolean     @default(true)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
   sales          Sale[]
+  orderItems     OrderItem[]
 }
 
 model Sale {
@@ -38,6 +39,32 @@ model Sale {
   unitPrice Float
   total     Float
   createdAt DateTime @default(now())
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  orderNumber   String      @unique
+  customerName  String
+  customerPhone String
+  customerEmail String?
+  notes         String?
+  status        String      @default("PENDING")
+  subtotal      Float
+  total         Float
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  items         OrderItem[]
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  unitPrice Float
+  total     Float
 }
 
 model BakerySettings {

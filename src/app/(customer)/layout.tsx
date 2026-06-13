@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import CustomerProviders from "@/components/CustomerProviders";
 
 export default function CustomerLayout({
   children,
@@ -7,10 +8,10 @@ export default function CustomerLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <CustomerProviders>
       <Header />
       <main className="min-h-screen">{children}</main>
       <Footer />
-    </>
+    </CustomerProviders>
   );
 }

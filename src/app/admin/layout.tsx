@@ -10,11 +10,13 @@ import {
   Wheat,
   ExternalLink,
   ShoppingCart,
+  ClipboardList,
 } from "lucide-react";
 
 const navItems = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/produtos", label: "Cadastro de Produtos", icon: Package },
+  { href: "/admin/pedidos", label: "Pedidos Online", icon: ClipboardList },
   { href: "/admin/vendas", label: "Registrar Venda", icon: ShoppingCart },
   { href: "/admin/configuracoes", label: "Configurações", icon: Settings },
 ];

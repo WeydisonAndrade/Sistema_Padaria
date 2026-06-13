@@ -38,7 +38,7 @@ export default function ProductsPage() {
           Nosso Cardápio
         </h1>
         <p className="mx-auto mt-8 max-w-md text-muted">
-          Escolha seus favoritos e peça pelo WhatsApp — entregamos fresquinho!
+          Escolha seus favoritos, adicione ao carrinho e finalize seu pedido!
         </p>
       </div>
 
