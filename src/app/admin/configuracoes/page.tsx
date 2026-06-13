@@ -22,7 +22,7 @@ export default function AdminSettingsPage() {
 
       const res = await fetch("/api/settings");
       const data = await res.json();
-      setForm(data);
+      setForm(data?.id ? data : null);
       setLoading(false);
     }
 

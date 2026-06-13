@@ -4,7 +4,7 @@ import { ArrowRight, Clock, MapPin, Sparkles, ChefHat, Heart } from "lucide-reac
 import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/ProductCard";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import { buildGeneralWhatsAppMessage } from "@/lib/utils";
+import { buildGeneralWhatsAppMessage, serializeProduct } from "@/lib/utils";
 import { BAKERY_NAME, BAKERY_DESCRIPTION, BAKERY_TAGLINE } from "@/lib/constants";
 
 export default async function HomePage() {
@@ -115,7 +115,11 @@ export default async function HomePage() {
         {featuredProducts.length > 0 ? (
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} whatsapp={whatsapp} />
+              <ProductCard
+                key={product.id}
+                product={serializeProduct(product)}
+                whatsapp={whatsapp}
+              />
             ))}
           </div>
         ) : (

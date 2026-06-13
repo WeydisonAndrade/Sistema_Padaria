@@ -1,3 +1,5 @@
+"use client";
+
 import { Tag, Boxes } from "lucide-react";
 import ProductImage from "./ProductImage";
 import WhatsAppButton from "./WhatsAppButton";

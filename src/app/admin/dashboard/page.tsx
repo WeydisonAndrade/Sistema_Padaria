@@ -1,41 +1,59 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Package, CheckCircle, XCircle, ArrowRight } from "lucide-react";
+import {
+  Package,
+  CheckCircle,
+  XCircle,
+  ArrowRight,
+  DollarSign,
+  ShoppingCart,
+} from "lucide-react";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getDashboardData } from "@/lib/dashboard";
+import DashboardChartsClient from "@/components/admin/DashboardChartsClient";
 import { formatPrice, getProductStatusLabel } from "@/lib/utils";
 
 export default async function AdminDashboardPage() {
   const session = await getSession();
   if (!session) redirect("/admin/login");
 
-  const [totalProducts, activeProducts, inactiveProducts, recentProducts] =
-    await Promise.all([
-      prisma.product.count(),
-      prisma.product.count({ where: { active: true } }),
-      prisma.product.count({ where: { active: false } }),
-      prisma.product.findMany({
-        take: 5,
-        orderBy: { updatedAt: "desc" },
-      }),
-    ]);
+  const [dashboard, recentProducts] = await Promise.all([
+    getDashboardData(),
+    prisma.product.findMany({
+      take: 5,
+      orderBy: { updatedAt: "desc" },
+    }),
+  ]);
 
   const stats = [
     {
-      label: "Total de Produtos",
-      value: totalProducts,
-      icon: Package,
+      label: "Faturamento do Mês",
+      value: formatPrice(dashboard.summary.currentMonthRevenue),
+      icon: DollarSign,
+      color: "bg-gold/20 text-gold",
+    },
+    {
+      label: "Pedidos do Mês",
+      value: dashboard.summary.currentMonthOrders,
+      icon: ShoppingCart,
       color: "bg-primary/10 text-primary",
     },
     {
-      label: "Ativos",
-      value: activeProducts,
+      label: "Total de Produtos",
+      value: dashboard.summary.totalProducts,
+      icon: Package,
+      color: "bg-secondary text-foreground",
+    },
+    {
+      label: "Produtos Ativos",
+      value: dashboard.summary.activeProducts,
       icon: CheckCircle,
       color: "bg-green-100 text-green-700",
     },
     {
-      label: "Inativos",
-      value: inactiveProducts,
+      label: "Produtos Inativos",
+      value: dashboard.summary.inactiveProducts,
       icon: XCircle,
       color: "bg-red-100 text-red-700",
     },
@@ -44,35 +62,45 @@ export default async function AdminDashboardPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">
+        <h1 className="font-display text-2xl font-bold text-foreground">
           Olá, {session.name}!
         </h1>
-        <p className="text-muted">Bem-vindo ao painel administrativo</p>
+        <p className="text-muted">
+          Visão geral da padaria · Faturamento total:{" "}
+          <span className="font-semibold text-primary">
+            {formatPrice(dashboard.summary.totalRevenue)}
+          </span>
+        </p>
       </div>
 
-      <div className="mb-8 grid gap-4 sm:grid-cols-3">
+      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
             <div
               key={stat.label}
-              className="rounded-2xl border border-border bg-card p-6 shadow-sm"
+              className="rounded-2xl border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md"
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted">{stat.label}</p>
-                  <p className="mt-1 text-3xl font-bold text-foreground">
-                    {stat.value}
-                  </p>
+                  <p className="text-xs font-medium text-muted">{stat.label}</p>
+                  <p className="mt-1 text-2xl font-bold text-foreground">{stat.value}</p>
                 </div>
-                <div className={`rounded-full p-3 ${stat.color}`}>
-                  <Icon className="h-6 w-6" />
+                <div className={`rounded-full p-2.5 ${stat.color}`}>
+                  <Icon className="h-5 w-5" />
                 </div>
               </div>
             </div>
           );
         })}
       </div>
+
+      <DashboardChartsClient
+        monthlyRevenue={dashboard.monthlyRevenue}
+        topProducts={dashboard.topProducts}
+        bestSeller={dashboard.bestSeller}
+        currentMonthRevenue={dashboard.summary.currentMonthRevenue}
+      />
 
       <div className="rounded-2xl border border-border bg-card shadow-sm">
         <div className="flex items-center justify-between border-b border-border px-6 py-4">

@@ -9,11 +9,13 @@ import {
   LogOut,
   Wheat,
   ExternalLink,
+  ShoppingCart,
 } from "lucide-react";
 
 const navItems = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/produtos", label: "Cadastro de Produtos", icon: Package },
+  { href: "/admin/vendas", label: "Registrar Venda", icon: ShoppingCart },
   { href: "/admin/configuracoes", label: "Configurações", icon: Settings },
 ];
 

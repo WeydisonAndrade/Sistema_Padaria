@@ -55,3 +55,26 @@ export function formatDateInput(value: string | Date | null): string {
 export function getProductStatusLabel(active: boolean): string {
   return active ? "Ativo" : "Inativo";
 }
+
+export function serializeProduct<T extends {
+  expirationDate: Date | string | null;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+}>(product: T) {
+  return {
+    ...product,
+    expirationDate: product.expirationDate
+      ? typeof product.expirationDate === "string"
+        ? product.expirationDate
+        : product.expirationDate.toISOString()
+      : null,
+    createdAt:
+      typeof product.createdAt === "string"
+        ? product.createdAt
+        : product.createdAt.toISOString(),
+    updatedAt:
+      typeof product.updatedAt === "string"
+        ? product.updatedAt
+        : product.updatedAt.toISOString(),
+  };
+}

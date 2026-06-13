@@ -66,7 +66,7 @@ export default function AdminProductsPage() {
     setLoading(true);
     const res = await fetch("/api/products?active=false");
     const data = await res.json();
-    setProducts(data);
+    setProducts(Array.isArray(data) ? data : []);
     setLoading(false);
   }
 

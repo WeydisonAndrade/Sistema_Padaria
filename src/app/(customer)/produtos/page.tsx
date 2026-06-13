@@ -21,8 +21,8 @@ export default function ProductsPage() {
       ]);
       const productsData = await productsRes.json();
       const settingsData = await settingsRes.json();
-      setProducts(productsData);
-      setSettings(settingsData);
+      setProducts(Array.isArray(productsData) ? productsData : []);
+      setSettings(settingsData?.id ? settingsData : null);
       setLoading(false);
     }
     loadData();

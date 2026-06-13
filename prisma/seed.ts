@@ -110,8 +110,67 @@ async function main() {
     });
   }
 
+  await seedSales();
+
   console.log("Seed concluído!");
   console.log(`Admin: ${email} / ${password}`);
+}
+
+async function seedSales() {
+  const saleCount = await prisma.sale.count();
+  if (saleCount > 0) return;
+
+  const dbProducts = await prisma.product.findMany();
+  const productMap = Object.fromEntries(dbProducts.map((p) => [p.code, p]));
+
+  const now = new Date();
+  const sales: {
+    productId: string;
+    quantity: number;
+    unitPrice: number;
+    total: number;
+    createdAt: Date;
+  }[] = [];
+
+  const config = [
+    { code: "PAO001", qtyPerMonth: [800, 920, 950, 1000, 1100, 1200] },
+    { code: "PAO002", qtyPerMonth: [40, 45, 50, 48, 52, 55] },
+    { code: "BOL001", qtyPerMonth: [25, 28, 30, 32, 35, 38] },
+    { code: "DOC001", qtyPerMonth: [60, 65, 70, 75, 80, 85] },
+    { code: "SAL001", qtyPerMonth: [80, 85, 90, 95, 100, 105] },
+    { code: "BEB001", qtyPerMonth: [150, 160, 170, 180, 190, 200] },
+  ];
+
+  for (let m = 0; m < 6; m++) {
+    const monthDate = new Date(now.getFullYear(), now.getMonth() - (5 - m), 1);
+
+    for (const item of config) {
+      const product = productMap[item.code];
+      if (!product) continue;
+
+      const totalQty = item.qtyPerMonth[m];
+      const batches = 5;
+      const qtyPerBatch = Math.floor(totalQty / batches);
+
+      for (let b = 0; b < batches; b++) {
+        sales.push({
+          productId: product.id,
+          quantity: qtyPerBatch,
+          unitPrice: product.price,
+          total: qtyPerBatch * product.price,
+          createdAt: new Date(
+            monthDate.getFullYear(),
+            monthDate.getMonth(),
+            3 + b * 5,
+            10 + b
+          ),
+        });
+      }
+    }
+  }
+
+  await prisma.sale.createMany({ data: sales });
+  console.log(`${sales.length} vendas de exemplo criadas.`);
 }
 
 main()

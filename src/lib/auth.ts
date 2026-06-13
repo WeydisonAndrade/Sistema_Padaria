@@ -1,9 +1,6 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "padaria-secreto-alterar-em-producao"
-);
+import { JWT_SECRET } from "@/lib/jwt-secret";
 
 export interface AdminSession {
   adminId: string;

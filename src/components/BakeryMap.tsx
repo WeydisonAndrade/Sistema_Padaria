@@ -1,18 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import L from "leaflet";
+import type { Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
-
-const icon = L.icon({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
 
 interface BakeryMapProps {
   latitude: number;
@@ -27,6 +18,33 @@ export default function BakeryMap({
   name,
   address,
 }: BakeryMapProps) {
+  const [icon, setIcon] = useState<Icon | null>(null);
+
+  useEffect(() => {
+    import("leaflet").then((L) => {
+      setIcon(
+        L.default.icon({
+          iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+          iconRetinaUrl:
+            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+          shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+          iconSize: [25, 41],
+          iconAnchor: [12, 41],
+          popupAnchor: [1, -34],
+          shadowSize: [41, 41],
+        })
+      );
+    });
+  }, []);
+
+  if (!icon) {
+    return (
+      <div className="flex h-[400px] items-center justify-center rounded-xl border border-border bg-secondary">
+        <p className="font-display text-muted italic">Carregando mapa…</p>
+      </div>
+    );
+  }
+
   return (
     <div className="h-[400px] w-full overflow-hidden rounded-xl border border-border shadow-sm">
       <MapContainer
