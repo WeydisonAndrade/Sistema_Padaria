@@ -57,6 +57,8 @@ export async function createOrder(input: CreateOrderInput) {
     throw new OrderError("Informe seu e-mail para gerar o pagamento Pix.");
   }
 
+  // E-mail obrigatório: exigido pelo Mercado Pago na criação da cobrança Pix
+
   if (!items.length) {
     throw new OrderError("Adicione produtos ao pedido.");
   }

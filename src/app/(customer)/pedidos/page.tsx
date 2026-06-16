@@ -1,6 +1,6 @@
 /**
  * Página de consulta de pedidos do cliente.
- * Busca pedidos pelo telefone informado e exibe status e totais.
+ * Busca pedidos pelo telefone e exibe status do pedido e do pagamento Pix.
  */
 
 "use client";
@@ -130,6 +130,7 @@ export default function OrdersPage() {
                     {formatDate(order.createdAt)}
                   </p>
                 </div>
+                {/* --- Badges: status do pagamento Pix e do pedido --- */}
                 <div className="flex flex-wrap gap-2">
                   <span
                     className={`rounded-full px-3 py-1 text-xs font-medium ${getPaymentStatusColor(order.paymentStatus)}`}

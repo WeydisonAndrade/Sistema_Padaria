@@ -71,6 +71,7 @@ export interface Order {
   customerEmail: string | null;
   notes: string | null;
   status: string;
+  // --- Campos de pagamento Pix (Mercado Pago) ---
   paymentMethod: string;
   paymentStatus: string;
   mpPaymentId: string | null;

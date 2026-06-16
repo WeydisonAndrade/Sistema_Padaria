@@ -1,5 +1,8 @@
 /**
- * Exibe QR Code Pix, código copia-e-cola e status do pagamento.
+ * Componente de pagamento Pix na confirmação do pedido.
+ *
+ * Exibe QR Code, código copia e cola e verifica automaticamente
+ * a cada 5 segundos se o pagamento foi aprovado no Mercado Pago.
  */
 
 "use client";
@@ -12,6 +15,7 @@ import type { Order } from "@/types";
 interface PixPaymentBoxProps {
   order: Order;
   phone: string;
+  /** Callback quando o polling detecta pagamento aprovado */
   onPaymentConfirmed?: (order: Order) => void;
 }
 
@@ -24,12 +28,14 @@ export default function PixPaymentBox({
   const [copied, setCopied] = useState(false);
   const [checking, setChecking] = useState(false);
 
+  // --- Estados derivados do pagamento ---
   const isPaid = currentOrder.paymentStatus === "PAID";
   const isExpired =
     currentOrder.paymentStatus === "EXPIRED" ||
     currentOrder.paymentStatus === "CANCELLED";
   const hasPix = Boolean(currentOrder.pixQrCode && currentOrder.pixQrCodeBase64);
 
+  // --- Consulta API /api/orders/:id/payment para sincronizar com o MP ---
   const checkPayment = useCallback(async () => {
     if (isPaid || isExpired || !currentOrder.mpPaymentId) return;
 
@@ -52,6 +58,7 @@ export default function PixPaymentBox({
     }
   }, [currentOrder.id, currentOrder.mpPaymentId, isExpired, isPaid, onPaymentConfirmed, phone]);
 
+  // --- Polling automático a cada 5s enquanto aguarda pagamento ---
   useEffect(() => {
     if (isPaid || isExpired) return;
 
@@ -62,6 +69,7 @@ export default function PixPaymentBox({
     return () => clearInterval(interval);
   }, [checkPayment, isExpired, isPaid]);
 
+  // --- Copia código Pix copia e cola para a área de transferência ---
   async function handleCopy() {
     if (!currentOrder.pixQrCode) return;
     await navigator.clipboard.writeText(currentOrder.pixQrCode);
@@ -69,6 +77,7 @@ export default function PixPaymentBox({
     setTimeout(() => setCopied(false), 2000);
   }
 
+  // --- UI: pagamento já confirmado ---
   if (isPaid) {
     return (
       <div className="mb-6 rounded-xl border border-green-200 bg-green-50 p-5 text-center">
@@ -81,6 +90,7 @@ export default function PixPaymentBox({
     );
   }
 
+  // --- UI: Pix expirado ou cancelado ---
   if (isExpired) {
     return (
       <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-5 text-center">
@@ -92,6 +102,7 @@ export default function PixPaymentBox({
     );
   }
 
+  // --- UI: falha ao gerar dados do Pix ---
   if (!hasPix) {
     return (
       <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-5 text-center text-sm text-amber-800">
@@ -100,6 +111,7 @@ export default function PixPaymentBox({
     );
   }
 
+  // --- UI: QR Code + copia e cola + botão de verificação manual ---
   return (
     <div className="mb-6 rounded-xl border border-border bg-secondary/30 p-5">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
@@ -118,6 +130,7 @@ export default function PixPaymentBox({
         Escaneie o QR Code ou copie o código abaixo. O pagamento expira em 30 minutos.
       </p>
 
+      {/* Imagem do QR Code gerada pelo Mercado Pago (base64) */}
       <div className="mx-auto mb-4 flex max-w-[220px] justify-center rounded-xl border border-border bg-white p-3">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img

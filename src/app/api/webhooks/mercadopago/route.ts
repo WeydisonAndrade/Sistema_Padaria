@@ -1,14 +1,20 @@
 /**
  * Webhook do Mercado Pago para atualizar status de pagamentos Pix.
+ *
+ * Configure no painel MP: https://seu-dominio.com/api/webhooks/mercadopago
+ * Eventos: payment (criação e atualização)
+ *
+ * O MP envia o ID do pagamento; consultamos a API para obter o status real.
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { syncOrderPaymentByMpId } from "@/lib/payments";
 
-// --- POST: notificação de pagamento (payment.created / payment.updated) ---
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+
+    // MP pode enviar dados na query string ou no corpo JSON
     const topic =
       request.nextUrl.searchParams.get("topic") ??
       request.nextUrl.searchParams.get("type") ??
@@ -25,7 +31,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ received: true });
   } catch {
-    // Mercado Pago reenvia notificações; respondemos 200 para evitar retentativas em loop
+    // Sempre 200: o MP reenvia notificações se receber erro
     return NextResponse.json({ received: true });
   }
 }

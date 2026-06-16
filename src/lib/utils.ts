@@ -84,6 +84,7 @@ export function getOrderStatusColor(status: string): string {
   return colors[status] ?? "bg-secondary text-foreground";
 }
 
+// --- Rótulos e cores de status de pagamento Pix (Mercado Pago) ---
 export function getPaymentStatusLabel(status: string): string {
   const labels: Record<string, string> = {
     PENDING: "Aguardando Pix",
@@ -104,6 +105,7 @@ export function getPaymentStatusColor(status: string): string {
   return colors[status] ?? "bg-secondary text-foreground";
 }
 
+// --- Mensagem WhatsApp: texto diferente se o Pix já foi pago ---
 export function buildOrderWhatsAppMessage(
   bakeryName: string,
   orderNumber: string,

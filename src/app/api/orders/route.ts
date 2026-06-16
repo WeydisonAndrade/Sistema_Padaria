@@ -1,5 +1,8 @@
 /**
  * Pedidos online: listagem (admin ou cliente por telefone) e criação pública.
+ *
+ * No POST, além de criar o pedido, gera cobrança Pix via Mercado Pago
+ * e persiste QR Code no banco para exibição na confirmação.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -8,6 +11,7 @@ import { prisma } from "@/lib/prisma";
 import { createOrder, updateOrderStatus, OrderError } from "@/lib/orders";
 import { createPixPayment } from "@/lib/mercadopago";
 
+// --- Relacionamentos incluídos na resposta do pedido ---
 const orderInclude = {
   items: {
     include: {
@@ -73,10 +77,12 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// --- POST: cria pedido e gera cobrança Pix no Mercado Pago ---
+// --- POST: cria pedido, gera Pix no Mercado Pago e salva QR Code ---
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+
+    // 1. Cria pedido e reserva estoque
     const order = await createOrder({
       customerName: body.customerName,
       customerPhone: body.customerPhone,
@@ -86,6 +92,7 @@ export async function POST(request: NextRequest) {
     });
 
     try {
+      // 2. Gera cobrança Pix vinculada ao pedido
       const pix = await createPixPayment({
         orderId: order.id,
         orderNumber: order.orderNumber,
@@ -94,6 +101,7 @@ export async function POST(request: NextRequest) {
         customerEmail: order.customerEmail!,
       });
 
+      // 3. Persiste dados do Pix para exibir na confirmação
       const orderWithPix = await prisma.order.update({
         where: { id: order.id },
         data: {
@@ -107,6 +115,7 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json(orderWithPix, { status: 201 });
     } catch (pixError) {
+      // Falha no MP: cancela pedido e devolve estoque
       await updateOrderStatus(order.id, "CANCELLED");
       const message =
         pixError instanceof Error

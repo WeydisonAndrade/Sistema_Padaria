@@ -55,12 +55,13 @@ model Order {
   customerEmail   String?
   notes           String?
   status          String      @default("PENDING") // PENDING | CONFIRMED | CANCELLED
+  // --- Pagamento Pix via Mercado Pago ---
   paymentMethod   String      @default("PIX")
   paymentStatus   String      @default("PENDING") // PENDING | PAID | EXPIRED | CANCELLED
-  mpPaymentId     String?     @unique
-  pixQrCode       String?
-  pixQrCodeBase64 String?
-  pixExpiresAt    DateTime?
+  mpPaymentId     String?     @unique // ID do pagamento no Mercado Pago
+  pixQrCode       String? // Código copia e cola
+  pixQrCodeBase64 String? // Imagem do QR Code em base64
+  pixExpiresAt    DateTime? // Validade da cobrança (30 min)
   subtotal        Float
   total           Float
   createdAt       DateTime    @default(now())

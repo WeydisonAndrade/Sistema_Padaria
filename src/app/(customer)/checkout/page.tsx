@@ -1,6 +1,7 @@
 /**
  * Página de checkout do cliente.
- * Coleta dados do comprador, envia pedido à API e redireciona para confirmação.
+ * Coleta dados do comprador, cria pedido + cobrança Pix via API
+ * e redireciona para a confirmação com QR Code.
  */
 
 "use client";
@@ -43,7 +44,7 @@ export default function CheckoutPage() {
     );
   }
 
-  // --- Submissão: cria pedido via POST /api/orders e limpa o carrinho ---
+  // --- Submissão: POST /api/orders (pedido + Pix) → redireciona para confirmação ---
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -148,6 +149,7 @@ export default function CheckoutPage() {
                 />
               </div>
 
+              {/* E-mail obrigatório: exigido pelo Mercado Pago para cobrança Pix */}
               <div>
                 <label htmlFor="email" className="mb-1 block text-sm font-medium">
                   E-mail *
@@ -197,6 +199,7 @@ export default function CheckoutPage() {
             )}
           </button>
 
+          {/* --- Aviso sobre prazo e redirecionamento para QR Code --- */}
           <p className="text-center text-xs text-muted">
             Você será redirecionado para a tela com QR Code Pix (Mercado Pago). O pedido
             expira em 30 minutos se o pagamento não for confirmado.

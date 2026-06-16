@@ -1,6 +1,7 @@
 /**
  * Conteúdo da confirmação de pedido (componente cliente).
- * Carrega detalhes do pedido por ID + telefone e oferece ações pós-compra.
+ * Exibe QR Code Pix, detalhes do pedido e ações pós-compra (WhatsApp).
+ * O PixPaymentBox faz polling até detectar pagamento aprovado.
  */
 
 "use client";
@@ -88,7 +89,7 @@ export default function OrderConfirmationContent() {
     );
   }
 
-  // --- Mensagem pré-formatada para combinar entrega no WhatsApp ---
+  // --- Mensagem WhatsApp adaptada ao status do pagamento Pix ---
   const whatsappMessage = buildOrderWhatsAppMessage(
     BAKERY_NAME,
     order.orderNumber,
@@ -101,6 +102,7 @@ export default function OrderConfirmationContent() {
 
   return (
     <>
+      {/* --- Hero: ícone e texto mudam conforme pagamento Pix --- */}
       <div className="hero-gradient border-b border-border py-16 text-center">
         <p className="mb-2 text-xs font-medium tracking-widest text-gold uppercase">
           {BAKERY_TAGLINE}
@@ -128,6 +130,7 @@ export default function OrderConfirmationContent() {
 
       <div className="mx-auto max-w-2xl px-4 py-12">
         <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+          {/* --- Bloco Pix: QR Code, copia e cola e verificação automática --- */}
           <PixPaymentBox
             order={order}
             phone={phone}

@@ -1,6 +1,7 @@
 /**
  * Página de gestão de pedidos online no admin.
- * Lista pedidos dos clientes e permite alterar status (cancelamento restaura estoque).
+ * Lista pedidos dos clientes, exibe status Pix e permite alterar status
+ * (cancelamento restaura estoque).
  */
 
 "use client";
@@ -126,11 +127,13 @@ export default function AdminOrdersPage() {
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
+                  {/* Status do pagamento Pix (Mercado Pago) */}
                   <span
                     className={`rounded-full px-3 py-1 text-xs font-medium ${getPaymentStatusColor(order.paymentStatus)}`}
                   >
                     Pix: {getPaymentStatusLabel(order.paymentStatus)}
                   </span>
+                  {/* Status operacional do pedido */}
                   <span
                     className={`rounded-full px-3 py-1 text-xs font-medium ${getOrderStatusColor(order.status)}`}
                   >

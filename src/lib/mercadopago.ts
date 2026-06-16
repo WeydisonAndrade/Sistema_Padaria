@@ -1,10 +1,15 @@
 /**
- * Cliente Mercado Pago e criação de pagamentos Pix.
+ * Integração com a API do Mercado Pago para pagamentos Pix.
+ *
+ * Responsabilidades:
+ * - Ler o access token do `.env` (MERCADOPAGO_ACCESS_TOKEN)
+ * - Criar cobranças Pix vinculadas a pedidos do sistema
+ * - Consultar status de pagamentos para webhook e polling
  */
 
 import { MercadoPagoConfig, Payment } from "mercadopago";
 
-// --- Configuração do access token ---
+// --- Credencial: token de teste ou produção do painel de desenvolvedores ---
 function getAccessToken(): string {
   const token = process.env.MERCADOPAGO_ACCESS_TOKEN;
   if (!token) {
@@ -15,11 +20,13 @@ function getAccessToken(): string {
   return token;
 }
 
+// --- Instancia o client HTTP do SDK oficial do Mercado Pago ---
 function getPaymentClient(): Payment {
   const client = new MercadoPagoConfig({ accessToken: getAccessToken() });
   return new Payment(client);
 }
 
+// --- Dados retornados após criar uma cobrança Pix ---
 export interface PixPaymentResult {
   mpPaymentId: string;
   pixQrCode: string;
@@ -28,7 +35,10 @@ export interface PixPaymentResult {
   ticketUrl: string | null;
 }
 
-// --- Cria cobrança Pix vinculada ao pedido ---
+/**
+ * Cria cobrança Pix no Mercado Pago e retorna QR Code + copia e cola.
+ * O `external_reference` guarda o ID do pedido para conciliar webhook/polling.
+ */
 export async function createPixPayment(input: {
   orderId: string;
   orderNumber: string;
@@ -37,7 +47,11 @@ export async function createPixPayment(input: {
   customerEmail: string;
 }): Promise<PixPaymentResult> {
   const payment = getPaymentClient();
+
+  // Pix expira em 30 minutos (prazo padrão exibido ao cliente)
   const expiresAt = new Date(Date.now() + 30 * 60 * 1000);
+
+  // Mercado Pago exige nome e sobrenome do pagador
   const nameParts = input.customerName.trim().split(/\s+/);
   const firstName = nameParts[0] ?? "Cliente";
   const lastName = nameParts.slice(1).join(" ") || firstName;
@@ -56,6 +70,7 @@ export async function createPixPayment(input: {
       },
     },
     requestOptions: {
+      // Evita cobranças duplicadas se a requisição for reenviada
       idempotencyKey: `order-${input.orderId}`,
     },
   });
@@ -75,7 +90,7 @@ export async function createPixPayment(input: {
   };
 }
 
-// --- Consulta status de um pagamento no Mercado Pago ---
+// --- Busca pagamento na API do MP (usado pelo webhook e pelo polling) ---
 export async function getMercadoPagoPayment(mpPaymentId: string) {
   const payment = getPaymentClient();
   return payment.get({ id: mpPaymentId });
