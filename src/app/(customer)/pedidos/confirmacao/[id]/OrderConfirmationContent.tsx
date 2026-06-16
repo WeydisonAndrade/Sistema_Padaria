@@ -8,8 +8,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
-import { CheckCircle, Loader2, MessageCircle } from "lucide-react";
+import { CheckCircle, Loader2, MessageCircle, QrCode } from "lucide-react";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import PixPaymentBox from "@/components/PixPaymentBox";
 import {
   formatPrice,
   formatDate,
@@ -87,13 +88,16 @@ export default function OrderConfirmationContent() {
     );
   }
 
-  // --- Mensagem pré-formatada para combinar pagamento no WhatsApp ---
+  // --- Mensagem pré-formatada para combinar entrega no WhatsApp ---
   const whatsappMessage = buildOrderWhatsAppMessage(
     BAKERY_NAME,
     order.orderNumber,
     order.total,
-    order.customerName
+    order.customerName,
+    order.paymentStatus === "PAID"
   );
+
+  const isPaid = order.paymentStatus === "PAID";
 
   return (
     <>
@@ -101,19 +105,35 @@ export default function OrderConfirmationContent() {
         <p className="mb-2 text-xs font-medium tracking-widest text-gold uppercase">
           {BAKERY_TAGLINE}
         </p>
-        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-          <CheckCircle className="h-8 w-8 text-green-600" />
+        <div
+          className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full ${
+            isPaid ? "bg-green-100" : "bg-amber-100"
+          }`}
+        >
+          {isPaid ? (
+            <CheckCircle className="h-8 w-8 text-green-600" />
+          ) : (
+            <QrCode className="h-8 w-8 text-amber-600" />
+          )}
         </div>
         <h1 className="section-title font-display text-4xl font-bold text-foreground md:text-5xl">
-          Pedido Confirmado!
+          {isPaid ? "Pedido Confirmado!" : "Pedido registrado!"}
         </h1>
         <p className="mx-auto mt-8 max-w-md text-muted">
-          Seu pedido foi registrado com sucesso
+          {isPaid
+            ? "Pagamento Pix recebido com sucesso"
+            : "Pague com Pix abaixo para confirmar seu pedido"}
         </p>
       </div>
 
       <div className="mx-auto max-w-2xl px-4 py-12">
         <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+          <PixPaymentBox
+            order={order}
+            phone={phone}
+            onPaymentConfirmed={setOrder}
+          />
+
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-sm text-muted">Número do pedido</p>
@@ -164,7 +184,11 @@ export default function OrderConfirmationContent() {
             <WhatsAppButton
               phone={whatsapp}
               message={whatsappMessage}
-              label="Combinar pagamento pelo WhatsApp"
+              label={
+                isPaid
+                  ? "Combinar entrega pelo WhatsApp"
+                  : "Tirar dúvidas pelo WhatsApp"
+              }
               className="w-full justify-center rounded-full"
             />
             <Link

@@ -48,18 +48,24 @@ model Sale {
 
 // --- Pedidos feitos pelos clientes no site ---
 model Order {
-  id            String      @id @default(cuid())
-  orderNumber   String      @unique // ex: TP20250613-0001
-  customerName  String
-  customerPhone String
-  customerEmail String?
-  notes         String?
-  status        String      @default("PENDING") // PENDING | CONFIRMED | CANCELLED
-  subtotal      Float
-  total         Float
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  items         OrderItem[]
+  id              String      @id @default(cuid())
+  orderNumber     String      @unique // ex: TP20250613-0001
+  customerName    String
+  customerPhone   String
+  customerEmail   String?
+  notes           String?
+  status          String      @default("PENDING") // PENDING | CONFIRMED | CANCELLED
+  paymentMethod   String      @default("PIX")
+  paymentStatus   String      @default("PENDING") // PENDING | PAID | EXPIRED | CANCELLED
+  mpPaymentId     String?     @unique
+  pixQrCode       String?
+  pixQrCodeBase64 String?
+  pixExpiresAt    DateTime?
+  subtotal        Float
+  total           Float
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  items           OrderItem[]
 }
 
 // --- Itens de cada pedido online (preço congelado no momento da compra) ---

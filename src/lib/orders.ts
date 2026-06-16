@@ -53,6 +53,10 @@ export async function createOrder(input: CreateOrderInput) {
     throw new OrderError("Informe seu telefone.");
   }
 
+  if (!customerEmail?.trim()) {
+    throw new OrderError("Informe seu e-mail para gerar o pagamento Pix.");
+  }
+
   if (!items.length) {
     throw new OrderError("Adicione produtos ao pedido.");
   }
@@ -116,7 +120,7 @@ export async function createOrder(input: CreateOrderInput) {
         orderNumber,
         customerName: customerName.trim(),
         customerPhone: customerPhone.replace(/\D/g, ""),
-        customerEmail: customerEmail?.trim() || null,
+        customerEmail: customerEmail.trim(),
         notes: notes?.trim() || null,
         status: "PENDING",
         subtotal,

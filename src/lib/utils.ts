@@ -84,12 +84,36 @@ export function getOrderStatusColor(status: string): string {
   return colors[status] ?? "bg-secondary text-foreground";
 }
 
+export function getPaymentStatusLabel(status: string): string {
+  const labels: Record<string, string> = {
+    PENDING: "Aguardando Pix",
+    PAID: "Pago",
+    EXPIRED: "Expirado",
+    CANCELLED: "Cancelado",
+  };
+  return labels[status] ?? status;
+}
+
+export function getPaymentStatusColor(status: string): string {
+  const colors: Record<string, string> = {
+    PENDING: "bg-amber-100 text-amber-800",
+    PAID: "bg-green-100 text-green-700",
+    EXPIRED: "bg-red-100 text-red-700",
+    CANCELLED: "bg-red-100 text-red-700",
+  };
+  return colors[status] ?? "bg-secondary text-foreground";
+}
+
 export function buildOrderWhatsAppMessage(
   bakeryName: string,
   orderNumber: string,
   total: number,
-  customerName: string
+  customerName: string,
+  paid = false
 ): string {
+  if (paid) {
+    return `Olá! Sou ${customerName}. Paguei via Pix o pedido ${orderNumber} no site da ${bakeryName} (${formatPrice(total)}). Gostaria de combinar a entrega/retirada.`;
+  }
   return `Olá! Sou ${customerName}. Acabei de fazer o pedido ${orderNumber} no site da ${bakeryName} no valor de ${formatPrice(total)}. Gostaria de combinar a forma de pagamento e entrega.`;
 }
 

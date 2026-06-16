@@ -91,10 +91,10 @@ export default function CheckoutPage() {
           {BAKERY_TAGLINE}
         </p>
         <h1 className="section-title font-display text-4xl font-bold text-foreground md:text-5xl">
-          Checkout
+          Finalize seu pedido
         </h1>
         <p className="mx-auto mt-8 max-w-md text-muted">
-          Preencha seus dados para concluir o pedido
+          Preencha seus dados e pague com Pix na próxima etapa
         </p>
       </div>
 
@@ -150,16 +150,20 @@ export default function CheckoutPage() {
 
               <div>
                 <label htmlFor="email" className="mb-1 block text-sm font-medium">
-                  E-mail (opcional)
+                  E-mail *
                 </label>
                 <input
                   id="email"
                   type="email"
                   value={customerEmail}
                   onChange={(e) => setCustomerEmail(e.target.value)}
+                  required
                   className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                   placeholder="seu@email.com"
                 />
+                <p className="mt-1 text-xs text-muted">
+                  Necessário para gerar o pagamento Pix no Mercado Pago.
+                </p>
               </div>
 
               <div>
@@ -189,12 +193,13 @@ export default function CheckoutPage() {
                 Processando…
               </>
             ) : (
-              `Confirmar pedido · ${formatPrice(subtotal)}`
+              `Ir para pagamento Pix · ${formatPrice(subtotal)}`
             )}
           </button>
 
           <p className="text-center text-xs text-muted">
-            Após confirmar, entraremos em contato para combinar pagamento e entrega.
+            Você será redirecionado para a tela com QR Code Pix (Mercado Pago). O pedido
+            expira em 30 minutos se o pagamento não for confirmado.
           </p>
         </form>
 

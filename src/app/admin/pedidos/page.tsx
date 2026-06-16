@@ -13,6 +13,8 @@ import {
   formatDate,
   getOrderStatusLabel,
   getOrderStatusColor,
+  getPaymentStatusLabel,
+  getPaymentStatusColor,
 } from "@/lib/utils";
 import type { Order } from "@/types";
 
@@ -123,7 +125,12 @@ export default function AdminOrdersPage() {
                     {formatDate(order.createdAt)}
                   </p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
+                  <span
+                    className={`rounded-full px-3 py-1 text-xs font-medium ${getPaymentStatusColor(order.paymentStatus)}`}
+                  >
+                    Pix: {getPaymentStatusLabel(order.paymentStatus)}
+                  </span>
                   <span
                     className={`rounded-full px-3 py-1 text-xs font-medium ${getOrderStatusColor(order.status)}`}
                   >

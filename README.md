@@ -8,6 +8,8 @@ Sistema web completo para padaria com duas interfaces: **clientes** e **administ
 
 - Página inicial com destaques e informações da padaria
 - Catálogo de produtos com filtros por categoria
+- Carrinho de compras e checkout com pagamento Pix (Mercado Pago)
+- QR Code Pix na confirmação do pedido
 - Cards com imagem, preço, código e estoque
 - Pedidos via WhatsApp com mensagem pré-preenchida
 - Mapa interativo com localização da padaria (OpenStreetMap)
@@ -40,6 +42,7 @@ Sistema web completo para padaria com duas interfaces: **clientes** e **administ
 - TypeScript
 - Tailwind CSS
 - Prisma + SQLite
+- Mercado Pago (pagamentos Pix)
 - Recharts (gráficos do dashboard)
 - Leaflet (mapas)
 - JWT (autenticação)
@@ -97,11 +100,15 @@ Altere as credenciais no arquivo `.env` antes de usar em produção.
 | --- | --- |
 | `/` | Página inicial (cliente) |
 | `/produtos` | Catálogo de produtos |
+| `/carrinho` | Carrinho de compras |
+| `/checkout` | Finalização do pedido com Pix |
+| `/pedidos` | Consulta de pedidos pelo telefone |
 | `/contato` | Mapa e WhatsApp |
 | `/admin/login` | Login do administrador |
 | `/admin/dashboard` | Painel com gráficos e estatísticas |
 | `/admin/produtos` | Cadastro de produtos |
 | `/admin/vendas` | Registrar venda e baixar estoque |
+| `/admin/pedidos` | Pedidos online e status de pagamento Pix |
 | `/admin/configuracoes` | Configurações da padaria |
 
 ## Vendas e Estoque
@@ -112,6 +119,36 @@ Ao registrar uma venda em **Admin > Registrar Venda**, o sistema:
 2. Verifica se há estoque suficiente
 3. Cria o registro de venda
 4. Reduz automaticamente a quantidade em estoque
+
+## Pagamento Pix (Mercado Pago)
+
+O checkout gera uma cobrança Pix via Mercado Pago. O cliente vê o QR Code na página de confirmação; ao pagar, o pedido é confirmado automaticamente.
+
+### Configuração
+
+1. Crie uma aplicação em [Mercado Pago Developers](https://www.mercadopago.com.br/developers/panel/app).
+2. Copie o **Access Token** (use credenciais de teste para desenvolvimento).
+3. Adicione ao `.env`:
+
+```env
+MERCADOPAGO_ACCESS_TOKEN="TEST-seu-token-aqui"
+```
+
+4. Para receber confirmações em produção, configure o webhook no painel do Mercado Pago:
+
+```
+https://seu-dominio.com/api/webhooks/mercadopago
+```
+
+Eventos: `payment` (criação e atualização).
+
+### Fluxo
+
+1. Cliente finaliza o checkout com nome, telefone e e-mail.
+2. O sistema cria o pedido, reserva o estoque e gera o Pix (validade: 30 minutos).
+3. Cliente paga escaneando o QR Code ou usando copia e cola.
+4. Mercado Pago notifica o webhook; o pedido passa para **Confirmado** / **Pago**.
+5. Se o Pix expirar, o pedido é cancelado e o estoque é restaurado.
 
 ## WhatsApp
 

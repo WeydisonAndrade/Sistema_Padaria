@@ -71,6 +71,12 @@ export interface Order {
   customerEmail: string | null;
   notes: string | null;
   status: string;
+  paymentMethod: string;
+  paymentStatus: string;
+  mpPaymentId: string | null;
+  pixQrCode: string | null;
+  pixQrCodeBase64: string | null;
+  pixExpiresAt: string | null;
   subtotal: number;
   total: number;
   createdAt: string;

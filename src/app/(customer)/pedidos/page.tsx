@@ -13,6 +13,8 @@ import {
   formatDate,
   getOrderStatusLabel,
   getOrderStatusColor,
+  getPaymentStatusLabel,
+  getPaymentStatusColor,
 } from "@/lib/utils";
 import { BAKERY_TAGLINE } from "@/lib/constants";
 import type { Order } from "@/types";
@@ -128,11 +130,18 @@ export default function OrdersPage() {
                     {formatDate(order.createdAt)}
                   </p>
                 </div>
-                <span
-                  className={`rounded-full px-3 py-1 text-xs font-medium ${getOrderStatusColor(order.status)}`}
-                >
-                  {getOrderStatusLabel(order.status)}
-                </span>
+                <div className="flex flex-wrap gap-2">
+                  <span
+                    className={`rounded-full px-3 py-1 text-xs font-medium ${getPaymentStatusColor(order.paymentStatus)}`}
+                  >
+                    {getPaymentStatusLabel(order.paymentStatus)}
+                  </span>
+                  <span
+                    className={`rounded-full px-3 py-1 text-xs font-medium ${getOrderStatusColor(order.status)}`}
+                  >
+                    {getOrderStatusLabel(order.status)}
+                  </span>
+                </div>
               </div>
               <div className="flex items-center justify-between">
                 <p className="text-sm text-muted">
