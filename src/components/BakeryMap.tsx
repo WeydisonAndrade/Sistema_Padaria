@@ -9,6 +9,11 @@ import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import type { Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
+import {
+  MAP_MARKER_ICON,
+  MAP_MARKER_ICON_2X,
+  MAP_MARKER_SHADOW,
+} from "@/lib/images";
 
 // --- Tipos ---
 
@@ -32,10 +37,9 @@ export default function BakeryMap({
     import("leaflet").then((L) => {
       setIcon(
         L.default.icon({
-          iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-          iconRetinaUrl:
-            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-          shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+          iconUrl: MAP_MARKER_ICON,
+          iconRetinaUrl: MAP_MARKER_ICON_2X,
+          shadowUrl: MAP_MARKER_SHADOW,
           iconSize: [25, 41],
           iconAnchor: [12, 41],
           popupAnchor: [1, -34],

@@ -318,7 +318,7 @@ export default function AdminProductsPage() {
                 <input
                   value={form.imageUrl}
                   onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-                  placeholder="https://..."
+                  placeholder="/images/products/pao-frances.jpg"
                   className="w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-primary"
                 />
               </div>

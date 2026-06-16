@@ -4,6 +4,7 @@
  */
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { PRODUCT_IMAGES } from "../src/lib/images";
 
 const prisma = new PrismaClient();
 
@@ -54,7 +55,7 @@ async function main() {
       price: 0.75,
       stockQuantity: 200,
       expirationDate: null,
-      imageUrl: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&q=80",
+      imageUrl: PRODUCT_IMAGES.PAO001,
       active: true,
     },
     {
@@ -64,7 +65,7 @@ async function main() {
       price: 12.9,
       stockQuantity: 30,
       expirationDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
-      imageUrl: "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=600&q=80",
+      imageUrl: PRODUCT_IMAGES.PAO002,
       active: true,
     },
     {
@@ -74,7 +75,7 @@ async function main() {
       price: 45.0,
       stockQuantity: 8,
       expirationDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-      imageUrl: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600&q=80",
+      imageUrl: PRODUCT_IMAGES.BOL001,
       active: true,
     },
     {
@@ -84,7 +85,7 @@ async function main() {
       price: 8.5,
       stockQuantity: 50,
       expirationDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-      imageUrl: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&q=80",
+      imageUrl: PRODUCT_IMAGES.DOC001,
       active: true,
     },
     {
@@ -94,7 +95,7 @@ async function main() {
       price: 6.0,
       stockQuantity: 40,
       expirationDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
-      imageUrl: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=600&q=80",
+      imageUrl: PRODUCT_IMAGES.SAL001,
       active: true,
     },
     {
@@ -104,7 +105,7 @@ async function main() {
       price: 5.0,
       stockQuantity: 100,
       expirationDate: null,
-      imageUrl: "https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=600&q=80",
+      imageUrl: PRODUCT_IMAGES.BEB001,
       active: true,
     },
   ];

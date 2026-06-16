@@ -11,6 +11,7 @@ import ProductCard from "@/components/ProductCard";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { buildGeneralWhatsAppMessage, serializeProduct } from "@/lib/utils";
 import { BAKERY_NAME, BAKERY_DESCRIPTION, BAKERY_TAGLINE } from "@/lib/constants";
+import { HERO_IMAGE } from "@/lib/images";
 import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 
@@ -96,7 +97,7 @@ export default async function HomePage() {
               <div className="absolute -inset-3 rounded-3xl border border-gold/30 bg-gold/5" />
               <div className="relative h-full overflow-hidden rounded-2xl shadow-2xl shadow-accent/20">
                 <Image
-                  src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&q=80"
+                  src={HERO_IMAGE}
                   alt="Pães artesanais Tutti Pane"
                   fill
                   className="object-cover"
