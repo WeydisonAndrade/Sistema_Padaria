@@ -94,6 +94,7 @@ npm run test:all
 |---------|--------|----------|
 | `utils.test.ts` | `formatPrice`, WhatsApp, status, datas | Formatação pt-BR, links, rótulos |
 | `auth.test.ts` | JWT | Criar sessão, token válido/inválido |
+| `dashboard.test.ts` | `getDashboardData` | Agregações, buckets mensais, ranking |
 
 ### Componentes (`src/contexts/__tests__/`)
 
@@ -122,7 +123,7 @@ npm run test:all
 Implementar **um a um**, sempre na camada mais baixa possível:
 
 1. ~~`payments.test.ts` — integração com mock do Mercado Pago~~ ✅
-2. `dashboard.test.ts` — unitário das agregações em `lib/dashboard.ts`
+2. ~~`dashboard.test.ts` — unitário das agregações em `lib/dashboard.ts`~~ ✅
 3. `ProductCard.test.tsx` — componente com botão adicionar ao carrinho
 4. `checkout.spec.ts` — E2E do fluxo carrinho → checkout (sem Pix real em CI)
 
