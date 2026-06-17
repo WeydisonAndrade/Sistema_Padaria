@@ -1,6 +1,6 @@
 /**
  * Layout compartilhado do painel administrativo.
- * Exibe sidebar de navegação, logout e área de conteúdo; omite o chrome na página de login.
+ * Sidebar no desktop; barra inferior de navegação e header com menu no mobile.
  */
 
 "use client";
@@ -17,8 +17,10 @@ import {
   ShoppingCart,
   ClipboardList,
 } from "lucide-react";
+import AdminMobileNav from "@/components/admin/AdminMobileNav";
+import AdminMobileHeader from "@/components/admin/AdminMobileHeader";
 
-// --- Itens de navegação do menu lateral ---
+// --- Itens de navegação do menu lateral (desktop) ---
 const navItems = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/produtos", label: "Cadastro de Produtos", icon: Package },
@@ -83,7 +85,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
         </nav>
 
-        <div className="border-t border-border p-4 space-y-2">
+        <div className="space-y-2 border-t border-border p-4">
           <Link
             href="/"
             target="_blank"
@@ -103,20 +105,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       </aside>
 
-      {/* --- Área principal: header mobile e conteúdo das páginas --- */}
+      {/* --- Área principal: chrome mobile + conteúdo --- */}
       <div className="flex flex-1 flex-col">
-        <header className="flex items-center justify-between border-b border-border bg-card px-4 py-4 md:hidden">
-          <p className="font-bold">Admin</p>
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="text-sm text-red-600"
-          >
-            Sair
-          </button>
-        </header>
+        <AdminMobileHeader onLogout={handleLogout} />
 
-        <main className="flex-1 p-4 md:p-8">{children}</main>
+        <main className="flex-1 p-4 pb-24 md:p-8 md:pb-8">{children}</main>
+
+        <AdminMobileNav />
       </div>
     </div>
   );

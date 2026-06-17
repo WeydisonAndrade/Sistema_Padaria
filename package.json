@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "clean": "node scripts/clean-next.mjs",
-    "dev": "next dev --turbo",
-    "dev:clean": "npm run clean && next dev --turbo",
+    "dev": "node scripts/dev.mjs",
+    "dev:clean": "node scripts/dev.mjs",
     "dev:webpack": "npm run clean && next dev",
     "build": "next build",
     "start": "next start",
