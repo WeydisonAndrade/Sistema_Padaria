@@ -160,6 +160,18 @@ Configure o número em **Admin > Configurações** no formato: código do país 
 
 O mapa usa OpenStreetMap via Leaflet. Configure latitude e longitude em **Admin > Configurações**.
 
+## Testes
+
+O projeto segue a **pirâmide de testes** (unitários → integração → E2E). Documentação completa em [`docs/TESTING.md`](docs/TESTING.md).
+
+```bash
+npm test                  # Vitest (unit + integration + components)
+npm run test:unit         # Funções puras (utils, auth)
+npm run test:integration  # Vendas, pedidos, API + banco test.db
+npm run test:components   # Carrinho (React Testing Library)
+npm run test:e2e          # Playwright — fluxos críticos
+```
+
 ## Scripts Disponíveis
 
 | Comando | Descrição |
@@ -170,3 +182,6 @@ O mapa usa OpenStreetMap via Leaflet. Configure latitude e longitude em **Admin 
 | `npm run db:generate` | Gera o client do Prisma |
 | `npm run db:push` | Sincroniza schema com o banco |
 | `npm run db:seed` | Popula dados iniciais |
+| `npm run images:download` | Baixa imagens locais para public/images |
+| `npm test` | Executa testes Vitest |
+| `npm run test:e2e` | Executa testes E2E (Playwright) |
