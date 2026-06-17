@@ -108,6 +108,7 @@ npm run test:all
 | `sales.test.ts` | Vendas balcão | Débito estoque, validações, produto inativo |
 | `orders.test.ts` | Pedidos online | Criação, e-mail Pix, cancelamento restaura estoque |
 | `api-products.test.ts` | `GET /api/products` | Lista, filtro ativo, categoria |
+| `payments.test.ts` | Pagamento Pix | Mock Mercado Pago, aprovação, expiração, estoque |
 
 ### E2E (`tests/e2e/`)
 
@@ -120,7 +121,7 @@ npm run test:all
 
 Implementar **um a um**, sempre na camada mais baixa possível:
 
-1. `payments.test.ts` — integração com mock do Mercado Pago
+1. ~~`payments.test.ts` — integração com mock do Mercado Pago~~ ✅
 2. `dashboard.test.ts` — unitário das agregações em `lib/dashboard.ts`
 3. `ProductCard.test.tsx` — componente com botão adicionar ao carrinho
 4. `checkout.spec.ts` — E2E do fluxo carrinho → checkout (sem Pix real em CI)
