@@ -1,22 +1,30 @@
 /**
- * Inicia o servidor de desenvolvimento com cache limpo.
- * Evita erros 500 por arquivos corrompidos em .next (webpack/turbopack).
+ * Inicia o servidor de desenvolvimento de forma estável:
+ * 1. Encerra instâncias antigas na porta 3000
+ * 2. Remove cache .next corrompido
+ * 3. Sobe o Next.js em modo webpack (mais estável que Turbopack no Windows)
  */
-import { existsSync, rmSync } from "node:fs";
 import { spawn } from "node:child_process";
-import { join } from "node:path";
+import { createRequire } from "node:module";
+import { setTimeout as sleep } from "node:timers/promises";
+import { killPort } from "./kill-port.mjs";
+import { removeNextCache } from "./clean-next.mjs";
 
-const nextDir = join(process.cwd(), ".next");
+const PORT = Number(process.env.PORT) || 3000;
 
-if (existsSync(nextDir)) {
-  rmSync(nextDir, { recursive: true, force: true });
-  console.log("Cache .next removido antes de iniciar o dev server.");
-}
+console.log(`Preparando ambiente de desenvolvimento na porta ${PORT}...`);
 
-const child = spawn("npx", ["next", "dev", "--turbo"], {
+killPort(PORT);
+await sleep(800);
+
+removeNextCache();
+
+const require = createRequire(import.meta.url);
+const nextBin = require.resolve("next/dist/bin/next");
+
+const child = spawn(process.execPath, [nextBin, "dev", "-p", String(PORT)], {
   stdio: "inherit",
-  shell: true,
-  env: { ...process.env, TURBOPACK: "1" },
+  env: { ...process.env, PORT: String(PORT) },
 });
 
 child.on("exit", (code) => {

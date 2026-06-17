@@ -1,10 +1,9 @@
 /**
- * Configuração do Next.js — imagens remotas, Turbopack e estabilidade do dev server.
+ * Configuração do Next.js — imagens remotas e estabilidade do dev server.
  */
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // --- Permite imagens do Unsplash nos componentes next/image ---
   images: {
     remotePatterns: [
       {
@@ -13,20 +12,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // Evita instabilidade do painel de devtools durante hot reload
   devIndicators: false,
-  // Cache webpack desativado apenas fora do Turbopack (npm run dev:webpack)
-  ...(process.env.TURBOPACK
-    ? {}
-    : {
-        webpack: (config, { dev }) => {
-          if (dev) {
-            config.cache = false;
-          }
-          return config;
-        },
-      }),
-  turbopack: {},
+  // Desativa cache do webpack em dev para evitar módulos corrompidos após hot reload
+  webpack: (config, { dev }) => {
+    if (dev) {
+      config.cache = false;
+    }
+    return config;
+  },
 };
 
 export default nextConfig;
