@@ -45,23 +45,22 @@ export default function ProductCard({ product, whatsapp }: ProductCardProps) {
 
   return (
     <article className="card-hover group overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-      {/* --- Área visual: imagem, categoria, preço e código --- */}
-      <div className="relative aspect-[4/3] overflow-hidden bg-secondary">
+      <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-secondary to-butter/30">
         {product.imageUrl ? (
           <ProductImage src={product.imageUrl} alt={product.name} />
         ) : (
           <div className="flex h-full flex-col items-center justify-center gap-2 bg-gradient-to-br from-secondary to-card text-muted">
-            <span className="font-display text-4xl font-bold text-primary/20">
+            <span className="font-display text-4xl font-bold text-coffee/20">
               {product.name.charAt(0)}
             </span>
             <span className="text-xs italic">Sem imagem</span>
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-accent/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-        <span className="absolute left-3 top-3 rounded-full border border-gold/30 bg-primary/90 px-3 py-1 text-xs font-medium tracking-wide text-white backdrop-blur-sm">
+        <div className="absolute inset-0 bg-gradient-to-t from-coffee/50 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        <span className="absolute left-3 top-3 rounded-full border border-gold/40 bg-coffee/85 px-3 py-1 text-xs font-medium tracking-wide text-cream backdrop-blur-sm">
           {product.category}
         </span>
-        <span className="absolute bottom-3 right-3 rounded-full bg-card/95 px-3 py-1 font-display text-base font-bold text-primary shadow-sm backdrop-blur-sm">
+        <span className="absolute bottom-3 right-3 rounded-full border border-gold/20 bg-cream/95 px-3 py-1 font-display text-base font-bold text-coffee shadow-sm backdrop-blur-sm">
           {formatPrice(product.price)}
         </span>
         <span className="absolute bottom-3 left-3 rounded-full bg-card/90 px-2 py-0.5 font-mono text-[10px] text-muted backdrop-blur-sm">
@@ -69,8 +68,7 @@ export default function ProductCard({ product, whatsapp }: ProductCardProps) {
         </span>
       </div>
 
-      {/* --- Informações e ações de compra --- */}
-      <div className="p-5">
+      <div className="border-t border-border/60 bg-gradient-to-b from-card to-cream/50 p-5">
         <h3 className="mb-3 font-display text-xl font-semibold text-foreground">
           {product.name}
         </h3>
@@ -102,7 +100,7 @@ export default function ProductCard({ product, whatsapp }: ProductCardProps) {
             <button
               type="button"
               onClick={handleAddToCart}
-              className="flex w-full items-center justify-center gap-2 rounded-full bg-primary py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-dark"
+              className="btn-warm flex w-full items-center justify-center gap-2 rounded-full py-2.5 text-sm font-medium text-white"
             >
               {added ? (
                 <>

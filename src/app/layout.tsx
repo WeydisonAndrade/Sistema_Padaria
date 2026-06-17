@@ -22,9 +22,9 @@ const dmSans = DM_Sans({
 
 // --- Metadados da página (SEO) ---
 export const metadata: Metadata = {
-  title: "Tutti Pane | Pães Artesanais e Doces Caseiros",
+  title: "Tutti Pane | Café da Manhã com Pão, Queijo e Café",
   description:
-    "Tutti Pane — tradição e sabor em cada fornada. Pães artesanais, bolos e doces feitos com carinho. Peça pelo WhatsApp!",
+    "Tutti Pane — pão quentinho, queijo derretido e café aromático. Peça seu café da manhã artesanal pelo WhatsApp ou site!",
 };
 
 // --- Componente de layout raiz ---

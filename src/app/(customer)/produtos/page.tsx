@@ -7,8 +7,8 @@
 
 import { useEffect, useState } from "react";
 import ProductCard from "@/components/ProductCard";
+import PageHero from "@/components/PageHero";
 import { PRODUCT_CATEGORIES } from "@/lib/utils";
-import { BAKERY_TAGLINE } from "@/lib/constants";
 import type { Product, BakerySettings } from "@/types";
 
 export default function ProductsPage() {
@@ -36,17 +36,10 @@ export default function ProductsPage() {
 
   return (
     <>
-      <div className="hero-gradient border-b border-border py-16 text-center">
-        <p className="mb-2 text-xs font-medium tracking-widest text-gold uppercase">
-          {BAKERY_TAGLINE}
-        </p>
-        <h1 className="section-title font-display text-4xl font-bold text-foreground md:text-5xl">
-          Nosso Cardápio
-        </h1>
-        <p className="mx-auto mt-8 max-w-md text-muted">
-          Escolha seus favoritos, adicione ao carrinho e finalize seu pedido!
-        </p>
-      </div>
+      <PageHero
+        title="Nosso Cardápio"
+        subtitle="Pães, queijos, cafés e doces para começar o dia com sabor"
+      />
 
       <div className="mx-auto max-w-6xl px-4 py-12">
         <div className="mb-10 flex flex-wrap justify-center gap-2">
@@ -57,8 +50,8 @@ export default function ProductsPage() {
               onClick={() => setCategory(cat)}
               className={`rounded-full px-5 py-2 text-sm font-medium transition-all ${
                 category === cat
-                  ? "bg-primary text-white shadow-md shadow-primary/20"
-                  : "border border-border bg-card text-muted hover:border-gold/50 hover:text-primary"
+                  ? "btn-warm text-white"
+                  : "border border-border bg-card text-muted hover:border-gold/50 hover:text-coffee"
               }`}
             >
               {cat}

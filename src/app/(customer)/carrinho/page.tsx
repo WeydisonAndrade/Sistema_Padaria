@@ -9,8 +9,8 @@ import Link from "next/link";
 import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import CartLoading from "@/components/CartLoading";
+import PageHero from "@/components/PageHero";
 import { formatPrice } from "@/lib/utils";
-import { BAKERY_TAGLINE } from "@/lib/constants";
 
 export default function CartPage() {
   const { items, subtotal, itemCount, updateQuantity, removeItem, isReady } = useCart();
@@ -24,14 +24,7 @@ export default function CartPage() {
   if (items.length === 0) {
     return (
       <>
-        <div className="hero-gradient border-b border-border py-16 text-center">
-          <p className="mb-2 text-xs font-medium tracking-widest text-gold uppercase">
-            {BAKERY_TAGLINE}
-          </p>
-          <h1 className="section-title font-display text-4xl font-bold text-foreground md:text-5xl">
-            Carrinho
-          </h1>
-        </div>
+        <PageHero title="Carrinho" />
         <div className="mx-auto max-w-lg px-4 py-24 text-center">
           <ShoppingBag className="mx-auto mb-4 h-12 w-12 text-muted" />
           <p className="font-display text-xl text-muted">Seu carrinho está vazio.</p>
@@ -49,17 +42,10 @@ export default function CartPage() {
 
   return (
     <>
-      <div className="hero-gradient border-b border-border py-16 text-center">
-        <p className="mb-2 text-xs font-medium tracking-widest text-gold uppercase">
-          {BAKERY_TAGLINE}
-        </p>
-        <h1 className="section-title font-display text-4xl font-bold text-foreground md:text-5xl">
-          Carrinho
-        </h1>
-        <p className="mx-auto mt-8 max-w-md text-muted">
-          {itemCount} item(ns) selecionado(s)
-        </p>
-      </div>
+      <PageHero
+        title="Carrinho"
+        subtitle={`${itemCount} item(ns) selecionado(s)`}
+      />
 
       <div className="mx-auto max-w-3xl px-4 py-12 pb-32 md:pb-12">
         <div className="space-y-4">

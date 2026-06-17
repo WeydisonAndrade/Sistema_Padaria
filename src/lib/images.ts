@@ -6,6 +6,13 @@
 // --- Hero da página inicial ---
 export const HERO_IMAGE = "/images/products/hero-padaria.jpg";
 
+// --- Imagens da seção café da manhã ---
+export const BREAKFAST_IMAGES = {
+  bread: "/images/products/pao-frances.jpg",
+  coffee: "/images/products/cafe-expresso.jpg",
+  pastry: "/images/products/croissant.jpg",
+} as const;
+
 // --- Imagens padrão dos produtos de exemplo (seed) ---
 export const PRODUCT_IMAGES = {
   PAO001: "/images/products/pao-frances.jpg",

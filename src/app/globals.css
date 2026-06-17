@@ -1,18 +1,23 @@
 @import "tailwindcss";
 
-/* --- Paleta de cores Tutti Pane (tema padaria) --- */
+/* --- Paleta Tutti Pane — café da manhã: pão, queijo e café quentinho --- */
 :root {
-  --background: #edd5a3;
-  --foreground: #1a1209;
+  --background: #f3e4c8;
+  --foreground: #2c1810;
   --primary: #8b2635;
   --primary-dark: #6b1d28;
-  --secondary: #e8c99b;
-  --accent: #2c1810;
+  --secondary: #e8d4b0;
+  --accent: #3d2517;
   --gold: #c9a227;
-  --gold-light: #e8d48b;
-  --muted: #6b5344;
-  --card: #fbf3e6;
-  --border: #d4b896;
+  --gold-light: #f0d78c;
+  --muted: #7a5c44;
+  --card: #fff9f0;
+  --border: #dcc9a8;
+  --cream: #fffbf5;
+  --coffee: #5c3d2e;
+  --coffee-light: #8b6347;
+  --butter: #f5d78e;
+  --crust: #c4956a;
 }
 
 /* --- Mapeamento das variáveis para classes Tailwind v4 --- */
@@ -28,17 +33,23 @@
   --color-muted: var(--muted);
   --color-card: var(--card);
   --color-border: var(--border);
+  --color-cream: var(--cream);
+  --color-coffee: var(--coffee);
+  --color-coffee-light: var(--coffee-light);
+  --color-butter: var(--butter);
+  --color-crust: var(--crust);
   --font-display: var(--font-display);
   --font-body: var(--font-body);
 }
 
-/* --- Tipografia e fundo global --- */
+/* --- Tipografia e fundo global (luz da manhã) --- */
 body {
   background-color: var(--background);
   background-image:
-    radial-gradient(ellipse at 0% 0%, rgba(255, 248, 235, 0.5) 0%, transparent 50%),
-    radial-gradient(ellipse at 100% 100%, rgba(196, 154, 90, 0.15) 0%, transparent 50%),
-    linear-gradient(180deg, #f0dfbf 0%, var(--background) 100%);
+    radial-gradient(ellipse at 15% 0%, rgba(255, 248, 235, 0.85) 0%, transparent 45%),
+    radial-gradient(ellipse at 85% 10%, rgba(245, 215, 142, 0.35) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 100%, rgba(196, 149, 106, 0.12) 0%, transparent 50%),
+    linear-gradient(180deg, #faf0dc 0%, var(--background) 55%, #edd9b8 100%);
   color: var(--foreground);
   font-family: var(--font-body), system-ui, sans-serif;
   min-height: 100vh;
@@ -59,9 +70,28 @@ h4 {
   z-index: 0;
 }
 
-/* --- Utilitários visuais reutilizáveis --- */
+/* --- Texturas e gradientes reutilizáveis --- */
 .bg-grain {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+.bg-bread-texture {
+  background-image:
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c4956a' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.hero-gradient {
+  background:
+    radial-gradient(ellipse at 20% 40%, rgba(139, 38, 53, 0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 15%, rgba(201, 162, 39, 0.18) 0%, transparent 45%),
+    radial-gradient(ellipse at 60% 80%, rgba(92, 61, 46, 0.06) 0%, transparent 40%),
+    linear-gradient(180deg, #faf0dc 0%, var(--background) 100%);
+}
+
+.morning-glow {
+  box-shadow:
+    0 0 60px rgba(245, 215, 142, 0.25),
+    0 20px 40px rgba(44, 24, 16, 0.08);
 }
 
 .section-title {
@@ -72,19 +102,58 @@ h4 {
 .section-title::after {
   content: "";
   position: absolute;
-  bottom: -8px;
+  bottom: -10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 60px;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  width: 72px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--crust), var(--gold), transparent);
 }
 
-.hero-gradient {
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(201, 162, 39, 0.35);
+  background: linear-gradient(135deg, rgba(255, 249, 240, 0.9), rgba(245, 215, 142, 0.25));
+  padding: 0.375rem 1rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--coffee);
+}
+
+/* --- Hero de páginas internas --- */
+.page-hero {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+  padding: 4rem 1rem;
+  text-align: center;
+}
+
+.page-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
   background:
-    radial-gradient(ellipse at 20% 50%, rgba(139, 38, 53, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(201, 162, 39, 0.12) 0%, transparent 40%),
-    linear-gradient(180deg, #f0dfbf 0%, var(--background) 100%);
+    radial-gradient(circle at 20% 30%, rgba(245, 215, 142, 0.3) 0%, transparent 35%),
+    radial-gradient(circle at 80% 20%, rgba(139, 99, 71, 0.1) 0%, transparent 30%);
+  pointer-events: none;
+}
+
+.page-hero-steam {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 120px;
+  height: 60px;
+  transform: translateX(-50%);
+  opacity: 0.35;
+  pointer-events: none;
 }
 
 .card-hover {
@@ -94,12 +163,67 @@ h4 {
 @media (hover: hover) {
   .card-hover:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(44, 24, 16, 0.12);
+    box-shadow:
+      0 16px 48px rgba(92, 61, 46, 0.12),
+      0 0 0 1px rgba(201, 162, 39, 0.15);
     border-color: var(--gold-light);
   }
 }
 
-/* --- Animações de entrada e menu mobile --- */
+.btn-warm {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  box-shadow: 0 4px 20px rgba(139, 38, 53, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+@media (hover: hover) {
+  .btn-warm:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 28px rgba(139, 38, 53, 0.35);
+  }
+}
+
+/* --- Animação de vapor do café --- */
+@keyframes steam-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scaleX(1);
+  }
+  40% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-36px) scaleX(1.15);
+  }
+}
+
+.steam-wisp {
+  position: absolute;
+  width: 8px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.5), transparent);
+  filter: blur(3px);
+  animation: steam-rise 3s ease-in-out infinite;
+}
+
+.steam-wisp:nth-child(1) {
+  left: 30%;
+  animation-delay: 0s;
+}
+
+.steam-wisp:nth-child(2) {
+  left: 50%;
+  animation-delay: 0.8s;
+  height: 28px;
+}
+
+.steam-wisp:nth-child(3) {
+  left: 68%;
+  animation-delay: 1.6s;
+}
+
 @keyframes fade-up {
   from {
     opacity: 0;
@@ -112,7 +236,7 @@ h4 {
 }
 
 .animate-fade-up {
-  animation: fade-up 0.6s ease forwards;
+  animation: fade-up 0.7s ease forwards;
 }
 
 @keyframes fade-in {
@@ -131,6 +255,20 @@ h4 {
   to {
     transform: translateX(0);
   }
+}
+
+@keyframes gentle-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-gentle-float {
+  animation: gentle-float 4s ease-in-out infinite;
 }
 
 .animate-overlay-in {

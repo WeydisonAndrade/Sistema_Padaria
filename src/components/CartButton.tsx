@@ -15,7 +15,7 @@ export default function CartButton() {
   return (
     <Link
       href="/carrinho"
-      className="relative rounded-lg p-2 text-muted transition-colors hover:bg-secondary hover:text-primary"
+      className="relative rounded-lg p-2 text-muted transition-colors hover:bg-butter/30 hover:text-coffee"
       aria-label={
         isReady
           ? `Carrinho com ${itemCount} item(ns)`

@@ -12,8 +12,8 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import CartLoading from "@/components/CartLoading";
+import PageHero from "@/components/PageHero";
 import { formatPrice } from "@/lib/utils";
-import { BAKERY_TAGLINE } from "@/lib/constants";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -87,17 +87,10 @@ export default function CheckoutPage() {
 
   return (
     <>
-      <div className="hero-gradient border-b border-border py-16 text-center">
-        <p className="mb-2 text-xs font-medium tracking-widest text-gold uppercase">
-          {BAKERY_TAGLINE}
-        </p>
-        <h1 className="section-title font-display text-4xl font-bold text-foreground md:text-5xl">
-          Finalize seu pedido
-        </h1>
-        <p className="mx-auto mt-8 max-w-md text-muted">
-          Preencha seus dados e pague com Pix na próxima etapa
-        </p>
-      </div>
+      <PageHero
+        title="Finalize seu pedido"
+        subtitle="Preencha seus dados e pague com Pix na próxima etapa"
+      />
 
       <div className="mx-auto grid max-w-5xl gap-8 px-4 py-12 lg:grid-cols-5">
         <form onSubmit={handleSubmit} className="space-y-5 lg:col-span-3">

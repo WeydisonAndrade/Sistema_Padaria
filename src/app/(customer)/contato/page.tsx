@@ -7,8 +7,9 @@ import { MapPin, Phone, Clock, MessageCircle } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import ContactMapSection from "@/components/ContactMapSection";
+import PageHero from "@/components/PageHero";
 import { buildGeneralWhatsAppMessage } from "@/lib/utils";
-import { BAKERY_NAME, BAKERY_TAGLINE } from "@/lib/constants";
+import { BAKERY_NAME } from "@/lib/constants";
 
 // --- Busca configurações da padaria no servidor (endereço, mapa, WhatsApp) ---
 export default async function ContactPage() {
@@ -24,17 +25,10 @@ export default async function ContactPage() {
 
   return (
     <>
-      <div className="hero-gradient border-b border-border py-16 text-center">
-        <p className="mb-2 text-xs font-medium tracking-widest text-gold uppercase">
-          {BAKERY_TAGLINE}
-        </p>
-        <h1 className="section-title font-display text-4xl font-bold text-foreground md:text-5xl">
-          Contato & Localização
-        </h1>
-        <p className="mx-auto mt-8 max-w-md text-muted">
-          Venha nos visitar ou faça seu pedido pelo WhatsApp
-        </p>
-      </div>
+      <PageHero
+        title="Contato & Localização"
+        subtitle="Venha tomar um café conosco ou peça pelo WhatsApp"
+      />
 
       <div className="mx-auto max-w-6xl px-4 py-12">
         <div className="grid gap-8 lg:grid-cols-2">

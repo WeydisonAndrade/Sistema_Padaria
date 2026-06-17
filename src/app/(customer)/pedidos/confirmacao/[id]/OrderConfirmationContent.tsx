@@ -103,29 +103,33 @@ export default function OrderConfirmationContent() {
   return (
     <>
       {/* --- Hero: ícone e texto mudam conforme pagamento Pix --- */}
-      <div className="hero-gradient border-b border-border py-16 text-center">
-        <p className="mb-2 text-xs font-medium tracking-widest text-gold uppercase">
-          {BAKERY_TAGLINE}
-        </p>
-        <div
-          className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full ${
-            isPaid ? "bg-green-100" : "bg-amber-100"
-          }`}
-        >
-          {isPaid ? (
-            <CheckCircle className="h-8 w-8 text-green-600" />
-          ) : (
-            <QrCode className="h-8 w-8 text-amber-600" />
-          )}
+      <div className="hero-gradient bg-bread-texture page-hero relative">
+        <div className="page-hero-steam" aria-hidden="true">
+          <span className="steam-wisp" />
+          <span className="steam-wisp" />
         </div>
-        <h1 className="section-title font-display text-4xl font-bold text-foreground md:text-5xl">
-          {isPaid ? "Pedido Confirmado!" : "Pedido registrado!"}
-        </h1>
-        <p className="mx-auto mt-8 max-w-md text-muted">
-          {isPaid
-            ? "Pagamento Pix recebido com sucesso"
-            : "Pague com Pix abaixo para confirmar seu pedido"}
-        </p>
+        <div className="relative mx-auto max-w-2xl">
+          <p className="section-eyebrow mb-4">{BAKERY_TAGLINE}</p>
+          <div
+            className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full ${
+              isPaid ? "bg-green-100" : "bg-butter/40"
+            }`}
+          >
+            {isPaid ? (
+              <CheckCircle className="h-8 w-8 text-green-600" />
+            ) : (
+              <QrCode className="h-8 w-8 text-coffee" />
+            )}
+          </div>
+          <h1 className="section-title font-display text-4xl font-bold text-foreground md:text-5xl">
+            {isPaid ? "Pedido Confirmado!" : "Pedido registrado!"}
+          </h1>
+          <p className="mx-auto mt-8 max-w-md text-muted">
+            {isPaid
+              ? "Pagamento Pix recebido com sucesso"
+              : "Pague com Pix abaixo para confirmar seu pedido"}
+          </p>
+        </div>
       </div>
 
       <div className="mx-auto max-w-2xl px-4 py-12">

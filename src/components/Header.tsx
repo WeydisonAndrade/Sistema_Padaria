@@ -2,17 +2,15 @@
 
 /**
  * Cabeçalho sticky do site com navegação desktop, menu mobile e carrinho.
- * Sem atalhos para o painel admin — o acesso é feito pela rota /admin/login.
+ * Visual acolhedor de café da manhã, sem atalhos para o painel admin.
  */
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ShoppingCart } from "lucide-react";
+import { Menu, X, ShoppingCart, Coffee } from "lucide-react";
 import { useEffect, useState } from "react";
 import { BAKERY_NAME, BAKERY_TAGLINE } from "@/lib/constants";
 import CartButton from "@/components/CartButton";
-
-// --- Links principais de navegação ---
 
 const navLinks = [
   { href: "/", label: "Início" },
@@ -25,12 +23,10 @@ export default function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // --- Fecha o menu mobile ao navegar ---
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
 
-  // --- Bloqueia scroll e escuta tecla Escape com menu aberto ---
   useEffect(() => {
     if (!menuOpen) return;
 
@@ -49,18 +45,20 @@ export default function Header() {
 
   return (
     <>
-      {/* --- Barra superior: logo, nav desktop e carrinho --- */}
-      <header className="sticky top-0 z-50 border-b border-border/60 bg-card/90 backdrop-blur-md">
+      <header className="sticky top-0 z-50 border-b border-border/70 bg-cream/90 shadow-sm shadow-coffee/5 backdrop-blur-md">
+        <div className="h-0.5 bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
+
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
           <Link href="/" className="group flex items-center gap-3">
-            <div className="relative flex h-11 w-11 items-center justify-center rounded-full border-2 border-gold bg-primary shadow-sm transition-transform group-hover:scale-105">
+            <div className="relative flex h-11 w-11 items-center justify-center rounded-full border-2 border-gold bg-gradient-to-br from-primary to-primary-dark shadow-md shadow-primary/20 transition-transform group-hover:scale-105">
               <span className="font-display text-lg font-bold text-gold-light">T</span>
+              <Coffee className="absolute -right-1 -top-1 h-3.5 w-3.5 text-butter" aria-hidden="true" />
             </div>
             <div>
               <p className="font-display text-xl font-bold tracking-tight text-foreground">
                 {BAKERY_NAME}
               </p>
-              <p className="text-[11px] italic tracking-widest text-gold uppercase">
+              <p className="text-[11px] italic tracking-widest text-coffee-light uppercase">
                 {BAKERY_TAGLINE}
               </p>
             </div>
@@ -74,19 +72,18 @@ export default function Header() {
                 className={`relative rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                   pathname === link.href
                     ? "text-primary"
-                    : "text-muted hover:text-foreground"
+                    : "text-muted hover:text-coffee"
                 }`}
               >
                 {link.label}
                 {pathname === link.href && (
-                  <span className="absolute bottom-0 left-1/2 h-0.5 w-4 -translate-x-1/2 rounded-full bg-gold" />
+                  <span className="absolute bottom-0 left-1/2 h-0.5 w-5 -translate-x-1/2 rounded-full bg-gradient-to-r from-gold to-crust" />
                 )}
               </Link>
             ))}
             <CartButton />
           </nav>
 
-          {/* --- Controles mobile: carrinho e botão do menu --- */}
           <div className="flex items-center gap-1 md:hidden">
             <CartButton />
             <button
@@ -102,27 +99,26 @@ export default function Header() {
         </div>
       </header>
 
-      {/* --- Drawer de navegação mobile --- */}
       {menuOpen && (
         <div className="fixed inset-0 z-[60] md:hidden">
           <button
             type="button"
-            className="animate-overlay-in absolute inset-0 bg-black/55 backdrop-blur-[2px]"
+            className="animate-overlay-in absolute inset-0 bg-coffee/40 backdrop-blur-[2px]"
             onClick={() => setMenuOpen(false)}
             aria-label="Fechar menu"
           />
 
           <nav
-            className="animate-drawer-in absolute inset-y-0 right-0 flex w-[min(100%,20rem)] flex-col bg-card shadow-2xl"
+            className="animate-drawer-in absolute inset-y-0 right-0 flex w-[min(100%,20rem)] flex-col bg-cream shadow-2xl"
             aria-label="Menu principal"
           >
-            <div className="flex items-center justify-between border-b border-border px-5 py-4">
+            <div className="flex items-center justify-between border-b border-border bg-gradient-to-r from-butter/20 to-transparent px-5 py-4">
               <div>
                 <p className="font-display text-lg font-bold text-foreground">
                   {BAKERY_NAME}
                 </p>
-                <p className="text-[10px] italic tracking-widest text-gold uppercase">
-                  Menu
+                <p className="text-[10px] italic tracking-widest text-coffee uppercase">
+                  Café da manhã
                 </p>
               </div>
               <button
@@ -158,7 +154,7 @@ export default function Header() {
                   className={`mt-2 flex items-center gap-3 rounded-xl px-4 py-3.5 text-base font-medium transition-colors ${
                     pathname === "/carrinho"
                       ? "bg-primary text-white"
-                      : "border border-border text-foreground hover:bg-secondary"
+                      : "border border-border bg-card text-foreground hover:bg-secondary"
                   }`}
                 >
                   <ShoppingCart className="h-5 w-5" />
@@ -167,9 +163,10 @@ export default function Header() {
               </div>
             </div>
 
-            <div className="border-t border-border px-5 py-4">
-              <p className="text-center text-xs text-muted">
-                Peça fresquinho todos os dias
+            <div className="border-t border-border bg-butter/10 px-5 py-4">
+              <p className="flex items-center justify-center gap-2 text-center text-xs text-coffee">
+                <Coffee className="h-3.5 w-3.5" />
+                Pão quentinho todos os dias
               </p>
             </div>
           </nav>

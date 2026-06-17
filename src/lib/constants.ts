@@ -5,6 +5,6 @@
 
 // --- Identidade e textos institucionais ---
 export const BAKERY_NAME = "Tutti Pane";
-export const BAKERY_TAGLINE = "Tradição em cada fornada";
+export const BAKERY_TAGLINE = "Café da manhã com alma";
 export const BAKERY_DESCRIPTION =
-  "Sabor e qualidade em cada fornada. Pães artesanais, bolos e doces feitos com ingredientes selecionados e muito carinho.";
+  "Acorde com o aroma do pão saindo do forno, o queijo derretendo na chapa e o café quentinho na xícara. Aqui cada manhã é um convite para saborear o melhor da padaria.";

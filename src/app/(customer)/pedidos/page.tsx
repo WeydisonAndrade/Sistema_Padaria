@@ -16,7 +16,7 @@ import {
   getPaymentStatusLabel,
   getPaymentStatusColor,
 } from "@/lib/utils";
-import { BAKERY_TAGLINE } from "@/lib/constants";
+import PageHero from "@/components/PageHero";
 import type { Order } from "@/types";
 
 export default function OrdersPage() {
@@ -56,17 +56,10 @@ export default function OrdersPage() {
 
   return (
     <>
-      <div className="hero-gradient border-b border-border py-16 text-center">
-        <p className="mb-2 text-xs font-medium tracking-widest text-gold uppercase">
-          {BAKERY_TAGLINE}
-        </p>
-        <h1 className="section-title font-display text-4xl font-bold text-foreground md:text-5xl">
-          Meus Pedidos
-        </h1>
-        <p className="mx-auto mt-8 max-w-md text-muted">
-          Consulte o status dos seus pedidos pelo telefone
-        </p>
-      </div>
+      <PageHero
+        title="Meus Pedidos"
+        subtitle="Consulte o status dos seus pedidos pelo telefone"
+      />
 
       <div className="mx-auto max-w-2xl px-4 py-12">
         <form
