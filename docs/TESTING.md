@@ -101,6 +101,7 @@ npm run test:all
 | Arquivo | Módulo | Cenários |
 |---------|--------|----------|
 | `CartContext.test.tsx` | Carrinho | Adicionar, estoque, subtotal, remover |
+| `ProductCard.test.tsx` | Card de produto | Renderização, carrinho, estoque, WhatsApp |
 
 ### Integração (`tests/integration/`)
 
@@ -117,6 +118,7 @@ npm run test:all
 |---------|-------|----------|
 | `customer.spec.ts` | Site público | Home, cardápio, contato |
 | `admin.spec.ts` | Painel admin | Redirect login, credenciais inválidas/válidas |
+| `checkout.spec.ts` | Checkout | Carrinho vazio, fluxo até confirmação Pix (mock) |
 
 ## Próximos testes sugeridos (roadmap QA)
 
@@ -124,8 +126,14 @@ Implementar **um a um**, sempre na camada mais baixa possível:
 
 1. ~~`payments.test.ts` — integração com mock do Mercado Pago~~ ✅
 2. ~~`dashboard.test.ts` — unitário das agregações em `lib/dashboard.ts`~~ ✅
-3. `ProductCard.test.tsx` — componente com botão adicionar ao carrinho
-4. `checkout.spec.ts` — E2E do fluxo carrinho → checkout (sem Pix real em CI)
+3. ~~`ProductCard.test.tsx` — componente com botão adicionar ao carrinho~~ ✅
+4. ~~`checkout.spec.ts` — E2E do fluxo carrinho → checkout (sem Pix real em CI)~~ ✅
+
+### Roadmap futuro (sugestões)
+
+- `lib/dashboard.ts` — testes de integração com vendas reais no banco
+- `PixPaymentBox.test.tsx` — polling de pagamento
+- `webhook-mercadopago.test.ts` — integração do webhook
 
 ## Estrutura de pastas
 
