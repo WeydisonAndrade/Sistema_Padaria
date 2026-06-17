@@ -59,15 +59,27 @@ export default function AdminMobileHeader({ onLogout }: AdminMobileHeaderProps) 
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setMenuOpen(true)}
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-secondary"
-          aria-label="Abrir menu"
-          aria-expanded={menuOpen}
-        >
-          <Menu className="h-5 w-5" />
-        </button>
+        <div className="flex items-center gap-1">
+          <Link
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-10 w-10 items-center justify-center rounded-lg text-primary transition-colors hover:bg-secondary"
+            aria-label="Ver site do cliente"
+            title="Ver site do cliente"
+          >
+            <ExternalLink className="h-5 w-5" />
+          </Link>
+          <button
+            type="button"
+            onClick={() => setMenuOpen(true)}
+            className="flex h-10 w-10 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-secondary"
+            aria-label="Abrir menu"
+            aria-expanded={menuOpen}
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+        </div>
       </header>
 
       {menuOpen && (
@@ -103,7 +115,7 @@ export default function AdminMobileHeader({ onLogout }: AdminMobileHeaderProps) 
                 className="flex items-center gap-3 rounded-xl border border-border px-4 py-3.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
               >
                 <ExternalLink className="h-5 w-5 text-primary" />
-                Ver site
+                Ver site do cliente
               </Link>
               <button
                 type="button"

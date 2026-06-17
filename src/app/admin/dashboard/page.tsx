@@ -68,33 +68,41 @@ export default async function AdminDashboardPage() {
   ];
 
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="font-display text-2xl font-bold text-foreground">
+    <div className="min-w-0">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="font-display text-xl font-bold text-foreground sm:text-2xl">
           Olá, {session.name}!
         </h1>
-        <p className="text-muted">
-          Visão geral da padaria · Faturamento total:{" "}
-          <span className="font-semibold text-primary">
-            {formatPrice(dashboard.summary.totalRevenue)}
+        <p className="mt-1 text-sm text-muted sm:text-base">
+          Visão geral da padaria
+          <span className="mt-1 block sm:mt-0 sm:inline">
+            {" "}
+            · Faturamento total:{" "}
+            <span className="font-semibold text-primary">
+              {formatPrice(dashboard.summary.totalRevenue)}
+            </span>
           </span>
         </p>
       </div>
 
-      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      {/* --- Cards de métricas: 1 coluna no mobile, 2 no tablet, 5 no desktop --- */}
+      <div className="mb-6 grid grid-cols-1 gap-3 sm:mb-8 sm:grid-cols-2 sm:gap-4 lg:grid-cols-5">
         {stats.map((stat) => {
           const Icon = stat.icon;
+
           return (
             <div
               key={stat.label}
-              className="rounded-2xl border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md"
+              className="min-w-0 rounded-2xl border border-border bg-card p-4 shadow-sm transition-shadow hover:shadow-md sm:p-5"
             >
-              <div className="flex items-center justify-between">
-                <div>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0 flex-1">
                   <p className="text-xs font-medium text-muted">{stat.label}</p>
-                  <p className="mt-1 text-2xl font-bold text-foreground">{stat.value}</p>
+                  <p className="mt-1 break-words text-xl font-bold text-foreground sm:text-2xl">
+                    {stat.value}
+                  </p>
                 </div>
-                <div className={`rounded-full p-2.5 ${stat.color}`}>
+                <div className={`shrink-0 rounded-full p-2.5 ${stat.color}`}>
                   <Icon className="h-5 w-5" />
                 </div>
               </div>
@@ -110,13 +118,13 @@ export default async function AdminDashboardPage() {
         currentMonthRevenue={dashboard.summary.currentMonthRevenue}
       />
 
-      {/* --- Tabela de produtos atualizados recentemente --- */}
+      {/* --- Lista de produtos recentes --- */}
       <div className="rounded-2xl border border-border bg-card shadow-sm">
-        <div className="flex items-center justify-between border-b border-border px-6 py-4">
+        <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3 sm:px-6 sm:py-4">
           <h2 className="font-bold text-foreground">Produtos Recentes</h2>
           <Link
             href="/admin/produtos"
-            className="flex items-center gap-1 text-sm text-primary hover:underline"
+            className="flex shrink-0 items-center gap-1 text-sm text-primary hover:underline"
           >
             Gerenciar
             <ArrowRight className="h-4 w-4" />
@@ -128,15 +136,15 @@ export default async function AdminDashboardPage() {
             {recentProducts.map((product) => (
               <div
                 key={product.id}
-                className="flex items-center justify-between px-6 py-4"
+                className="flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-4"
               >
-                <div>
-                  <p className="font-medium text-foreground">{product.name}</p>
+                <div className="min-w-0">
+                  <p className="truncate font-medium text-foreground">{product.name}</p>
                   <p className="text-sm text-muted">
                     {product.code} · {product.category}
                   </p>
                 </div>
-                <div className="text-right">
+                <div className="flex items-center justify-between gap-3 sm:block sm:text-right">
                   <p className="font-medium text-primary">
                     {formatPrice(product.price)}
                   </p>
@@ -152,7 +160,7 @@ export default async function AdminDashboardPage() {
             ))}
           </div>
         ) : (
-          <p className="px-6 py-8 text-center text-muted">
+          <p className="px-4 py-8 text-center text-muted sm:px-6">
             Nenhum produto cadastrado.{" "}
             <Link href="/admin/produtos" className="text-primary hover:underline">
               Adicionar produto

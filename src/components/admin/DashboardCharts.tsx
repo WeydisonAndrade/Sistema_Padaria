@@ -96,46 +96,47 @@ export default function DashboardCharts({
   // --- Placeholder enquanto não montou ---
   if (!mounted) {
     return (
-      <div className="mb-8 space-y-6">
-        <div className="grid gap-6 lg:grid-cols-3">
-          <div className="h-[420px] rounded-2xl bg-secondary/50 lg:col-span-2" />
-          <div className="h-[420px] rounded-2xl bg-secondary/50" />
+      <div className="mb-6 space-y-4 sm:mb-8 sm:space-y-6">
+        <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
+          <div className="h-80 rounded-2xl bg-secondary/50 sm:h-[420px] lg:col-span-2" />
+          <div className="h-80 rounded-2xl bg-secondary/50 sm:h-[420px]" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="mb-8 space-y-6">
-      <div className="grid gap-6 lg:grid-cols-3">
+    <div className="mb-6 space-y-4 sm:mb-8 sm:space-y-6">
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
         {/* --- Gráfico de faturamento mensal --- */}
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm lg:col-span-2">
-          <div className="mb-6 flex items-center justify-between">
-            <div>
-              <h2 className="font-display text-lg font-bold text-foreground">
+        <div className="min-w-0 rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-6 lg:col-span-2">
+          <div className="mb-4 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-start sm:justify-between">
+            <div className="min-w-0">
+              <h2 className="font-display text-base font-bold text-foreground sm:text-lg">
                 Faturamento Mensal
               </h2>
               <p className="text-sm text-muted">Últimos 6 meses</p>
             </div>
-            <div className="flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1.5">
-              <TrendingUp className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium text-primary">
+            <div className="flex w-fit max-w-full items-center gap-2 rounded-full bg-primary/10 px-3 py-1.5">
+              <TrendingUp className="h-4 w-4 shrink-0 text-primary" />
+              <span className="truncate text-xs font-medium text-primary sm:text-sm">
                 {formatPrice(currentMonthRevenue)} este mês
               </span>
             </div>
           </div>
-          <div className="h-72 w-full min-w-0">
+          <div className="h-56 w-full min-w-0 sm:h-72">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={50}>
-              <BarChart data={monthlyRevenue} margin={{ top: 5, right: 5, left: 0, bottom: 5 }}>
+              <BarChart data={monthlyRevenue} margin={{ top: 5, right: 4, left: -8, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#d4b896" vertical={false} />
                 <XAxis
                   dataKey="month"
-                  tick={{ fill: "#6b5344", fontSize: 12 }}
+                  tick={{ fill: "#6b5344", fontSize: 10 }}
                   axisLine={{ stroke: "#d4b896" }}
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fill: "#6b5344", fontSize: 11 }}
+                  width={42}
+                  tick={{ fill: "#6b5344", fontSize: 10 }}
                   axisLine={false}
                   tickLine={false}
                   tickFormatter={(v) => `R$${v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}`}
@@ -155,38 +156,38 @@ export default function DashboardCharts({
         </div>
 
         {/* --- Card do produto mais vendido --- */}
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+        <div className="min-w-0 rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-6">
           <div className="mb-4 flex items-center gap-2">
-            <Trophy className="h-5 w-5 text-gold" />
-            <h2 className="font-display text-lg font-bold text-foreground">
+            <Trophy className="h-5 w-5 shrink-0 text-gold" />
+            <h2 className="font-display text-base font-bold text-foreground sm:text-lg">
               Mais Vendido
             </h2>
           </div>
 
           {bestSeller ? (
             <div className="flex flex-col items-center text-center">
-              <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full border-2 border-gold bg-primary/10">
-                <Trophy className="h-10 w-10 text-gold" />
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-gold bg-primary/10 sm:h-20 sm:w-20">
+                <Trophy className="h-8 w-8 text-gold sm:h-10 sm:w-10" />
               </div>
               <p className="font-mono text-xs text-primary">{bestSeller.code}</p>
-              <h3 className="mt-1 font-display text-xl font-bold text-foreground">
+              <h3 className="mt-1 font-display text-lg font-bold text-foreground sm:text-xl">
                 {bestSeller.name}
               </h3>
               <p className="text-sm text-muted">{bestSeller.category}</p>
 
-              <div className="mt-6 w-full space-y-3 rounded-xl bg-secondary/60 p-4">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="flex items-center gap-1.5 text-muted">
-                    <ShoppingBag className="h-4 w-4" />
-                    Unidades vendidas
+              <div className="mt-4 w-full space-y-3 rounded-xl bg-secondary/60 p-3 sm:mt-6 sm:p-4">
+                <div className="flex items-center justify-between gap-2 text-sm">
+                  <span className="flex min-w-0 items-center gap-1.5 text-muted">
+                    <ShoppingBag className="h-4 w-4 shrink-0" />
+                    <span className="truncate">Unidades vendidas</span>
                   </span>
-                  <span className="font-bold text-foreground">
+                  <span className="shrink-0 font-bold text-foreground">
                     {bestSeller.totalQuantity}
                   </span>
                 </div>
-                <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center justify-between gap-2 text-sm">
                   <span className="text-muted">Faturamento</span>
-                  <span className="font-bold text-primary">
+                  <span className="shrink-0 font-bold text-primary">
                     {formatPrice(bestSeller.totalRevenue)}
                   </span>
                 </div>
@@ -202,30 +203,32 @@ export default function DashboardCharts({
 
       {/* --- Gráfico horizontal: top produtos por quantidade --- */}
       {topProductsChart.length > 0 && (
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-          <h2 className="mb-1 font-display text-lg font-bold text-foreground">
+        <div className="min-w-0 rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-6">
+          <h2 className="mb-1 font-display text-base font-bold text-foreground sm:text-lg">
             Produtos Mais Vendidos
           </h2>
-          <p className="mb-6 text-sm text-muted">Ranking por quantidade nos últimos 6 meses</p>
-          <div className="h-64 w-full min-w-0">
+          <p className="mb-4 text-sm text-muted sm:mb-6">
+            Ranking por quantidade nos últimos 6 meses
+          </p>
+          <div className="h-52 w-full min-w-0 sm:h-64">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={50}>
               <BarChart
                 data={topProductsChart}
                 layout="vertical"
-                margin={{ top: 0, right: 20, left: 10, bottom: 0 }}
+                margin={{ top: 0, right: 8, left: 0, bottom: 0 }}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#d4b896" horizontal={false} />
                 <XAxis
                   type="number"
-                  tick={{ fill: "#6b5344", fontSize: 11 }}
+                  tick={{ fill: "#6b5344", fontSize: 10 }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <YAxis
                   type="category"
                   dataKey="name"
-                  width={90}
-                  tick={{ fill: "#6b5344", fontSize: 11 }}
+                  width={72}
+                  tick={{ fill: "#6b5344", fontSize: 10 }}
                   axisLine={false}
                   tickLine={false}
                 />

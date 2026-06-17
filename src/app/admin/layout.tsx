@@ -89,10 +89,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link
             href="/"
             target="_blank"
-            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted hover:bg-secondary hover:text-foreground"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-primary hover:bg-primary/10"
           >
             <ExternalLink className="h-4 w-4" />
-            Ver Site
+            Ver Site do Cliente
           </Link>
           <button
             type="button"
@@ -109,7 +110,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="flex flex-1 flex-col">
         <AdminMobileHeader onLogout={handleLogout} />
 
-        <main className="flex-1 p-4 pb-24 md:p-8 md:pb-8">{children}</main>
+        <main className="min-w-0 flex-1 overflow-x-hidden p-4 pb-24 md:p-8 md:pb-8">{children}</main>
 
         <AdminMobileNav />
       </div>

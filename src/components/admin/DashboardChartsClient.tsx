@@ -13,10 +13,10 @@ import type { MonthlyRevenue, TopProduct } from "@/lib/dashboard";
 const DashboardCharts = dynamic(() => import("@/components/admin/DashboardCharts"), {
   ssr: false,
   loading: () => (
-    <div className="mb-8 space-y-6">
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="h-[420px] animate-pulse rounded-2xl bg-secondary/80 lg:col-span-2" />
-        <div className="h-[420px] animate-pulse rounded-2xl bg-secondary/80" />
+    <div className="mb-6 space-y-4 sm:mb-8 sm:space-y-6">
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
+        <div className="h-80 animate-pulse rounded-2xl bg-secondary/80 sm:h-[420px] lg:col-span-2" />
+        <div className="h-80 animate-pulse rounded-2xl bg-secondary/80 sm:h-[420px]" />
       </div>
     </div>
   ),

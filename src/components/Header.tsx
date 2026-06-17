@@ -1,8 +1,8 @@
 "use client";
 
 /**
- * Cabeçalho sticky do site com navegação desktop, menu mobile,
- * botão do carrinho e link para o painel admin quando autenticado.
+ * Cabeçalho sticky do site com navegação desktop, menu mobile e carrinho.
+ * Sem atalhos para o painel admin — o acesso é feito pela rota /admin/login.
  */
 
 import Link from "next/link";
@@ -24,21 +24,6 @@ const navLinks = [
 export default function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  // --- Verifica sessão admin ao mudar de rota ---
-  useEffect(() => {
-    async function checkAdminSession() {
-      try {
-        const res = await fetch("/api/auth/me");
-        setIsAdmin(res.ok);
-      } catch {
-        setIsAdmin(false);
-      }
-    }
-
-    checkAdminSession();
-  }, [pathname]);
 
   // --- Fecha o menu mobile ao navegar ---
   useEffect(() => {
@@ -98,14 +83,6 @@ export default function Header() {
                 )}
               </Link>
             ))}
-            {isAdmin && (
-              <Link
-                href="/admin/dashboard"
-                className="ml-3 rounded-full border border-primary/20 bg-primary px-5 py-2 text-sm font-medium text-white transition-all hover:bg-primary-dark hover:shadow-md"
-              >
-                Admin
-              </Link>
-            )}
             <CartButton />
           </nav>
 
@@ -187,16 +164,6 @@ export default function Header() {
                   <ShoppingCart className="h-5 w-5" />
                   Carrinho
                 </Link>
-
-                {isAdmin && (
-                  <Link
-                    href="/admin/dashboard"
-                    onClick={() => setMenuOpen(false)}
-                    className="mt-4 rounded-xl bg-primary px-4 py-3.5 text-center text-base font-medium text-white"
-                  >
-                    Admin
-                  </Link>
-                )}
               </div>
             </div>
 
