@@ -4,10 +4,12 @@
 import { prisma } from "@/lib/prisma";
 
 export async function resetDatabase() {
+  await prisma.loginAttempt.deleteMany();
   await prisma.sale.deleteMany();
   await prisma.orderItem.deleteMany();
   await prisma.order.deleteMany();
   await prisma.product.deleteMany();
+  await prisma.admin.deleteMany();
 }
 
 export async function seedProduct(overrides: Partial<{

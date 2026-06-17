@@ -18,6 +18,18 @@ model Admin {
   createdAt DateTime @default(now())
 }
 
+// --- Auditoria e proteção contra brute force no login admin ---
+model LoginAttempt {
+  id        String   @id @default(cuid())
+  email     String
+  ip        String
+  success   Boolean
+  createdAt DateTime @default(now())
+
+  @@index([email, createdAt])
+  @@index([ip, createdAt])
+}
+
 // --- Catálogo de produtos da padaria ---
 model Product {
   id             String      @id @default(cuid())

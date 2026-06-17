@@ -34,7 +34,13 @@ export default function AdminLoginPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "Erro ao fazer login");
+        const retry = data.retryAfterSeconds as number | undefined;
+        const message = data.error || "Erro ao fazer login";
+        setError(
+          retry
+            ? `${message} (tente novamente em ~${Math.ceil(retry / 60)} min)`
+            : message
+        );
         return;
       }
 
@@ -75,6 +81,8 @@ export default function AdminLoginPage() {
             <input
               id="email"
               type="email"
+              name="email"
+              autoComplete="username"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -91,6 +99,8 @@ export default function AdminLoginPage() {
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
+                name="password"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
